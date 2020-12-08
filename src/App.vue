@@ -1,32 +1,27 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
+    <div class="nav">
+      <router-link to="/">儀錶板</router-link> |
+      <router-link to="/articles">文章</router-link>
     </div>
-    <router-view/>
+    <router-view :allData="allData"/>
   </div>
 </template>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-
-#nav {
-  padding: 30px;
-}
-
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
-}
-</style>
+<script>
+export default {
+  data() {
+    return {
+      allData: [],
+    };
+  },
+  created() {
+    const vm = this;
+    fetch('https://bahamut-home-article-cralwer.herokuapp.com/')
+      .then((res) => res.json())
+      .then((data) => {
+        vm.allData = data.data;
+      });
+  },
+};
+</script>

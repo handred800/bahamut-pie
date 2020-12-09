@@ -1,15 +1,31 @@
 <template>
-  <div class="card chart-container">
-    <v-chart :options="pie" />
+  <div class="row">
+    <div class="col-auto">
+      <div class="card chart-container">
+        <v-chart :options="pie" />
+      </div>
+    </div>
+    <div class="col-33">
+      <div class="side-bar">
+        <div class="card card-hoverable" v-for="(data, index) in allData" :key="index">
+          <div class="card-title">{{ data.title }}</div>
+          <div class="card-meta">
+            <span>{{ data.meta.date }}</span>
+            <span>{{ data.meta.gp }}</span>
+            <span>{{ data.meta.view }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 export default {
-  props: ['allData'],
+  props: ['articlesData'],
   data() {
     return {
-      data: [],
+      allData: this.articlesData,
       pie: {
         title: {
           text: '某站点用户访问来源',
@@ -24,6 +40,11 @@ export default {
           orient: 'vertical',
           left: 'left',
           data: ['直接访问', '邮件营销', '联盟广告', '视频广告', '搜索引擎'],
+        },
+        itemStyle: {
+          color: '#c23531',
+          shadowBlur: 200,
+          shadowColor: 'rgba(0, 0, 0, 0.5)',
         },
         series: [
           {

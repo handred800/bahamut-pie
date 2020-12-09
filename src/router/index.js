@@ -5,7 +5,11 @@ Vue.use(VueRouter);
 
 const routes = [
   {
-    path: '/',
+    path: '*',
+    redirect: '/dashboard',
+  },
+  {
+    path: '/dashboard',
     component: () => import('../views/dashboard.vue'),
   },
   {
@@ -17,6 +21,7 @@ const routes = [
 const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
+  linkActiveClass: 'active',
   routes,
 });
 

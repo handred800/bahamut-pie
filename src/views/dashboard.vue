@@ -84,26 +84,28 @@ export default {
     },
     updateChart() {
       const vm = this;
-      const articlesData = vm.barchart.dataOrderBy === 'default'
-        ? vm.articlesData
-        : vm.articlesData.sort((a, b) => a.meta[vm.barchart.dataOrderBy] - b.meta[vm.barchart.dataOrderBy]);
+      const { dataType, dataOrderBy } = vm.barchart;
+      const articlesData = vm._.cloneDeep(vm.articlesData);
+      if (dataOrderBy === 'view') {
+        articlesData.sort((a, b) => a.meta[dataOrderBy] - b.meta[dataOrderBy]);
+      }
 
       const data = {
         xAxis: {
           data: articlesData.map((article) => article.title),
         },
         yAxis: {
-          max: Math.max(...articlesData.map((article) => article.meta[vm.barchart.dataType])),
+          max: Math.max(...articlesData.map((article) => article.meta[dataType])),
         },
         series: [
           {
-            name: vm.barchart.dataType,
-            data: articlesData.map((article) => article.meta[vm.barchart.dataType]),
+            name: dataType,
+            data: articlesData.map((article) => article.meta[dataType]),
           },
         ],
       };
 
-      vm.chartsOption.barchart = Object.assign(vm.chartsOption.barchart, data);
+      vm.chartsOption.barchart = vm._.merge(vm._.cloneDeep(vm.chartsOption.barchart), data);
     },
   },
   watch: {

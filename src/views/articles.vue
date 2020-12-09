@@ -5,8 +5,8 @@
         <div class="card-title">{{data.title}}</div>
         <div class="card-meta">
           <span>{{data.meta.date}}</span>
-          <span>{{data.meta.gp}}</span>
-          <span>{{data.meta.view}}</span>
+          <span>gp: {{data.meta.gp}}</span>
+          <span>瀏覽: {{data.meta.view}}</span>
         </div>
       </a>
     </div>

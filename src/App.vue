@@ -15,6 +15,7 @@ export default {
       allData: [],
     };
   },
+  methods: {},
   created() {
     const vm = this;
     fetch('https://bahamut-home-article-cralwer.herokuapp.com/')

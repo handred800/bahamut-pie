@@ -1,0 +1,33 @@
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  [class^="col-"] {
+    flex: 0 0 100%;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0 8px;
+  }
+
+  @media screen and (min-width: 768px) {
+    .col-25 {
+        flex: 0 0 25%;
+        width: 25%;
+      }      
+    .col-33 {
+      flex: 0 0 33.33%;
+      width: 33.33%;
+    }
+    .col-50 {
+        flex: 0 0 50%;
+        width: 50%;
+      }    
+    .col-66 {
+      flex: 0 0 66.66%;
+      width: 66.66%;
+    }
+    .col-auto {
+      flex: 1 0 auto;
+      width: auto;
+    }
+  }
+}

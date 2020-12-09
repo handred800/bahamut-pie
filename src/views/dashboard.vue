@@ -1,39 +1,65 @@
 <template>
-  <div class="row">
-    <div class="col-auto">
-      <div class="card chart-container">
-        <div class="form-inline">
-          <select class="form-select" v-model="barchart.dataType">
-            <option value="view">瀏覽數</option>
-            <option value="gp">GP數</option>
-          </select>
-          <span class="card-title">圖表 </span>
-          <select class="form-select" v-model="barchart.dataOrderBy">
-            <option value="default">預設排列</option>
-            <option value="view">依觀看數排列</option>
-          </select>
+  <section>
+    <div class="row">
+      <div class="col-25">
+        <div class="card">
+          <div class="card-meta">文章總數</div>
+          <div class="hero">{{totalMeta.articleLength | currency}}</div>
         </div>
-        <v-chart :autoresize="true" :options="chartsOption.barchart" v-if="articlesData.length > 0"></v-chart>
+      </div>
+      <div class="col-25">
+        <div class="card">
+          <div class="card-meta">總觀看數</div>
+          <div class="hero">{{totalMeta.view | currency}}</div>
+        </div>
+      </div>
+      <div class="col-25">
+        <div class="card">
+          <div class="card-meta">總GP數</div>
+          <div class="hero">{{totalMeta.gp | currency}}</div>
+        </div>
       </div>
     </div>
-    <div class="col-33">
-      <div class="side-bar">
-        <div class="card card-hoverable" v-for="(data, index) in articlesData" :key="index">
-          <div class="card-title">{{ data.title }}</div>
-          <div class="card-meta">
-            <span>{{ data.meta.date }}</span>
-            <span>gp: {{ data.meta.gp }}</span>
-            <span>瀏覽: {{ data.meta.view }}</span>
+    <div class="row">
+      <div class="col-50">
+        <div class="card chart-container">
+          <div class="form-inline">
+            <select class="form-select" v-model="barchart.dataType">
+              <option value="view">瀏覽數</option>
+              <option value="gp">GP數</option>
+            </select>
+            <span class="card-title">圖表 </span>
+            <select class="form-select" v-model="barchart.dataOrderBy">
+              <option value="default">預設排列</option>
+              <option value="view">依觀看數排列</option>
+              <option value="gp">依gp排列</option>
+            </select>
+          </div>
+          <v-chart :autoresize="true" :options="chartsOption.barchart" v-if="articlesData.length > 0"></v-chart>
+        </div>
+      </div>
+      <div class="col-50">
+        <div class="side-bar">
+          <div class="card card-hoverable" v-for="(data, index) in articlesData" :key="index">
+            <div class="card-title">{{ data.title }}</div>
+            <div class="card-meta">
+              <span>{{ data.meta.date }}</span>
+              <span>gp: {{ data.meta.gp }}</span>
+              <span>瀏覽: {{ data.meta.view }}</span>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
+  </section>
 </template>
 
 <script>
+import uitil from '../uitil.vue';
+
 export default {
   props: ['articlesData'],
+  mixins: [uitil],
   data() {
     return {
       totalMeta: {},
@@ -78,6 +104,7 @@ export default {
   methods: {
     calculateMeta(targetArticles) {
       return {
+        articleLength: targetArticles.length,
         gp: targetArticles.reduce((totalVal, currentObj) => totalVal + currentObj.meta.gp, 0),
         view: targetArticles.reduce((totalVal, currentObj) => totalVal + currentObj.meta.view, 0),
       };
@@ -86,8 +113,8 @@ export default {
       const vm = this;
       const { dataType, dataOrderBy } = vm.barchart;
       const articlesData = vm._.cloneDeep(vm.articlesData);
-      if (dataOrderBy === 'view') {
-        articlesData.sort((a, b) => a.meta[dataOrderBy] - b.meta[dataOrderBy]);
+      if (dataOrderBy !== 'default') {
+        articlesData.sort((a, b) => b.meta[dataOrderBy] - a.meta[dataOrderBy]);
       }
 
       const data = {

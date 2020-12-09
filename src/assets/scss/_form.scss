@@ -1,0 +1,39 @@
+.form-inline{
+    .form-input,.form-select{
+        display: inline-block;
+        margin-right: 0.5rem;
+    }
+}
+
+.form-input,.form-select{
+    display: block;
+    font-size: 1rem;
+    border: 1px solid $color-gray;
+    outline: none;
+    border-radius: 5px;
+    padding: .5rem;
+}
+
+.btn {
+    font-size: 1rem;
+    font-family: "Noto Sans TC", sans-serif;
+    padding: 0.3rem 1rem;
+    background-color: $color-gray;
+    border-radius: 5px;
+    border: none;
+    outline: none;
+    transition: background-color 0.15s;
+    cursor: pointer;
+  
+    &.btn-primary {
+      color: #fff;
+      background-color: $color-secondary;
+      &:hover,
+      &:focus {
+        background-color: darken($color-secondary, 10%);
+      }
+      &:active {
+        background-color: $color-primary;
+      }
+    }
+  }

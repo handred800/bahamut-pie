@@ -2,10 +2,18 @@
   <div class="row">
     <div class="col-auto">
       <div class="card chart-container">
-        <h2 class="card-title">圖表</h2>
-        <button class="btn btn-primary" @click="updateChart('gp')">GP</button>
-        <button class="btn btn-primary" @click="updateChart('view')">瀏覽</button>
-        <v-chart :options="barchart" v-if="articlesData.length > 0"></v-chart>
+        <div class="form-inline">
+          <select class="form-select" v-model="barchart.dataType">
+            <option value="view">瀏覽數</option>
+            <option value="gp">GP數</option>
+          </select>
+          <span class="card-title">圖表 </span>
+          <select class="form-select" v-model="barchart.dataOrderBy">
+            <option value="default">預設排列</option>
+            <option value="view">依觀看數排列</option>
+          </select>
+        </div>
+        <v-chart :autoresize="true" :options="chartsOption.barchart" v-if="articlesData.length > 0"></v-chart>
       </div>
     </div>
     <div class="col-33">
@@ -30,31 +38,40 @@ export default {
     return {
       totalMeta: {},
       barchart: {
-        tooltip: {
-          trigger: 'axis',
-          axisPointer: {
-            type: 'shadow',
+        dataType: 'view',
+        dataOrderBy: 'default',
+      },
+      chartsOption: {
+        barchart: {
+          tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+              type: 'shadow',
+            },
           },
-        },
-        dataZoom: [
-          { type: 'inside' },
-          { type: 'slider' },
-        ],
-        xAxis:
-        {
-          type: 'category',
-          show: false,
-        },
-        yAxis:
-        {
-          type: 'value',
-        },
-        series: [
+          dataZoom: [
+            { type: 'inside' },
+            { type: 'slider' },
+          ],
+          xAxis:
           {
-            type: 'bar',
-            large: true,
+            type: 'category',
+            show: false,
           },
-        ],
+          yAxis:
+          {
+            type: 'value',
+            axixTick: {
+              inside: true,
+            },
+          },
+          series: [
+            {
+              type: 'bar',
+              large: true,
+            },
+          ],
+        },
       },
     };
   },
@@ -65,30 +82,39 @@ export default {
         view: targetArticles.reduce((totalVal, currentObj) => totalVal + currentObj.meta.view, 0),
       };
     },
-    updateChart(name) {
+    updateChart() {
       const vm = this;
+      const articlesData = vm.barchart.dataOrderBy === 'default'
+        ? vm.articlesData
+        : vm.articlesData.sort((a, b) => a.meta[vm.barchart.dataOrderBy] - b.meta[vm.barchart.dataOrderBy]);
+
       const data = {
         xAxis: {
-          data: vm.articlesData.map((article) => article.title),
+          data: articlesData.map((article) => article.title),
         },
         yAxis: {
-          max: Math.max(...vm.articlesData.map((article) => article.meta[name])),
+          max: Math.max(...articlesData.map((article) => article.meta[vm.barchart.dataType])),
         },
         series: [
           {
-            name,
-            data: vm.articlesData.map((article) => article.meta[name]),
+            name: vm.barchart.dataType,
+            data: articlesData.map((article) => article.meta[vm.barchart.dataType]),
           },
         ],
       };
 
-      vm.barchart = Object.assign(vm.barchart, data);
+      vm.chartsOption.barchart = Object.assign(vm.chartsOption.barchart, data);
     },
   },
   watch: {
     articlesData() {
       this.totalMeta = this.calculateMeta(this.articlesData);
-      console.log(this.totalMeta);
+    },
+    barchart: {
+      deep: true,
+      handler() {
+        this.updateChart();
+      },
     },
   },
   mounted() {},

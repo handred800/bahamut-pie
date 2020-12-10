@@ -19,6 +19,12 @@
           <div class="hero">{{totalMeta.gp | currency}}</div>
         </div>
       </div>
+      <div class="col-25">
+        <div class="card">
+          <div class="card-meta">總巴幣</div>
+          <div class="hero">{{totalMeta.coin | currency}}</div>
+        </div>
+      </div>
     </div>
     <div class="row">
       <div class="col-50">
@@ -39,7 +45,8 @@
         </div>
       </div>
       <div class="col-50">
-        <div class="side-bar">
+        <scatter-chart :inputData="articlesData" v-if="articlesData.length > 0"></scatter-chart>
+        <!-- <div class="side-bar">
           <div class="card card-hoverable" v-for="(data, index) in articlesData" :key="index">
             <div class="card-title">{{ data.title }}</div>
             <div class="card-meta">
@@ -48,7 +55,7 @@
               <span>瀏覽: {{ data.meta.view }}</span>
             </div>
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
   </section>
@@ -56,10 +63,12 @@
 
 <script>
 import uitil from '../uitil.vue';
+import scatterChart from '../components/chartScatter.vue';
 
 export default {
   props: ['articlesData'],
   mixins: [uitil],
+  components: { scatterChart },
   data() {
     return {
       totalMeta: {},
@@ -106,6 +115,7 @@ export default {
       return {
         articleLength: targetArticles.length,
         gp: targetArticles.reduce((totalVal, currentObj) => totalVal + currentObj.meta.gp, 0),
+        coin: targetArticles.reduce((totalVal, currentObj) => totalVal + currentObj.meta.coin, 0),
         view: targetArticles.reduce((totalVal, currentObj) => totalVal + currentObj.meta.view, 0),
       };
     },
@@ -146,6 +156,8 @@ export default {
       },
     },
   },
-  mounted() {},
+  created() {
+    this.totalMeta = this.calculateMeta(this.articlesData);
+  },
 };
 </script>

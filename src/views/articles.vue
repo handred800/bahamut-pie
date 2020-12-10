@@ -1,6 +1,7 @@
 <template>
 <div>
   <input type="text" class="form-input" placeholder="搜尋關鍵字" v-model="keyword">
+  <span v-if="keyword!==''">找到{{articleListFilted.length}}篇文</span>
   <div v-if="articlesData.length > 0">
     <transition-group name="article-list" class="row">
       <div class="col-33 article-list" v-for="(data,index) in articleListFilted" :key="`${data.meta.date}-${index}`">

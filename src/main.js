@@ -8,6 +8,7 @@ import router from './router';
 // echart 元件
 import 'echarts/lib/chart/bar';
 import 'echarts/lib/chart/pie';
+import 'echarts/lib/chart/scatter';
 import 'echarts/lib/chart/line';
 import 'echarts/lib/component/tooltip';
 import 'echarts/lib/component/dataZoom';

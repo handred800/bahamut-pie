@@ -41,21 +41,14 @@
               <option value="gp">依gp排列</option>
             </select>
           </div>
-          <v-chart :autoresize="true" :options="chartsOption.barchart" v-if="articlesData.length > 0"></v-chart>
+          <bar-chart :inputData="barChartDataset" v-if="articlesData.length > 0"></bar-chart>
         </div>
       </div>
       <div class="col-50">
-        <scatter-chart :inputData="articlesData" v-if="articlesData.length > 0"></scatter-chart>
-        <!-- <div class="side-bar">
-          <div class="card card-hoverable" v-for="(data, index) in articlesData" :key="index">
-            <div class="card-title">{{ data.title }}</div>
-            <div class="card-meta">
-              <span>{{ data.meta.date }}</span>
-              <span>gp: {{ data.meta.gp }}</span>
-              <span>瀏覽: {{ data.meta.view }}</span>
-            </div>
-          </div>
-        </div> -->
+        <div class="card chart-container">
+          <div class="card-title">瀏覽 / GP 散佈圖</div>
+          <scatter-chart :inputData="scatterDataset" v-if="articlesData.length > 0"></scatter-chart>
+        </div>
       </div>
     </div>
   </section>
@@ -63,50 +56,19 @@
 
 <script>
 import uitil from '../uitil.vue';
+import barChart from '../components/chartBar.vue';
 import scatterChart from '../components/chartScatter.vue';
 
 export default {
   props: ['articlesData'],
   mixins: [uitil],
-  components: { scatterChart },
+  components: { barChart, scatterChart },
   data() {
     return {
       totalMeta: {},
       barchart: {
         dataType: 'view',
         dataOrderBy: 'default',
-      },
-      chartsOption: {
-        barchart: {
-          tooltip: {
-            trigger: 'axis',
-            axisPointer: {
-              type: 'shadow',
-            },
-          },
-          dataZoom: [
-            { type: 'inside' },
-            { type: 'slider' },
-          ],
-          xAxis:
-          {
-            type: 'category',
-            show: false,
-          },
-          yAxis:
-          {
-            type: 'value',
-            axixTick: {
-              inside: true,
-            },
-          },
-          series: [
-            {
-              type: 'bar',
-              large: true,
-            },
-          ],
-        },
       },
     };
   },
@@ -119,41 +81,36 @@ export default {
         view: targetArticles.reduce((totalVal, currentObj) => totalVal + currentObj.meta.view, 0),
       };
     },
-    updateChart() {
+  },
+  computed: {
+    barChartDataset() {
       const vm = this;
       const { dataType, dataOrderBy } = vm.barchart;
-      const articlesData = vm._.cloneDeep(vm.articlesData);
-      if (dataOrderBy !== 'default') {
-        articlesData.sort((a, b) => b.meta[dataOrderBy] - a.meta[dataOrderBy]);
-      }
 
-      const data = {
-        xAxis: {
-          data: articlesData.map((article) => article.title),
-        },
-        yAxis: {
-          max: Math.max(...articlesData.map((article) => article.meta[dataType])),
-        },
-        series: [
-          {
-            name: dataType,
-            data: articlesData.map((article) => article.meta[dataType]),
-          },
-        ],
-      };
+      let dataset = vm._.cloneDeep(vm.articlesData);
+      // 有設定排序類型
+      if (dataOrderBy !== 'default') dataset.sort((a, b) => b.meta[dataOrderBy] - a.meta[dataOrderBy]);
+      dataset = [
+        ['title', dataType],
+        ...dataset.map((article) => [article.title, article.meta[dataType]]),
+      ];
 
-      vm.chartsOption.barchart = vm._.merge(vm._.cloneDeep(vm.chartsOption.barchart), data);
+      return dataset;
+    },
+    scatterDataset() {
+      let dataset = this._.cloneDeep(this.articlesData);
+      dataset = dataset.map((article) => ({
+        title: article.title,
+        gp: article.meta.gp,
+        view: article.meta.view,
+      }));
+
+      return dataset;
     },
   },
   watch: {
     articlesData() {
       this.totalMeta = this.calculateMeta(this.articlesData);
-    },
-    barchart: {
-      deep: true,
-      handler() {
-        this.updateChart();
-      },
     },
   },
   created() {

@@ -1,8 +1,5 @@
 <template>
-  <div class="card chart-container">
-    <div class="card-title">瀏覽/GP 離散圖</div>
-    <v-chart :autoresize="true" :options="options"></v-chart>
-  </div>
+  <v-chart :autoresize="true" :options="options"></v-chart>
 </template>
 
 <script>
@@ -31,18 +28,20 @@ export default {
         ],
         xAxis: {
           type: 'value',
+          minInterval: 1,
         },
         yAxis: {
           type: 'value',
         },
         dataset: {
-          source: [],
+          source: this.inputData,
         },
         tooltip: {},
         series: [
           {
             type: 'scatter',
             symbolSize: 10,
+            large: true,
             encode: {
               x: 'gp',
               y: 'view',
@@ -58,16 +57,11 @@ export default {
       },
     };
   },
-  created() {
-    let scatterData = this._.cloneDeep(this.inputData);
-    scatterData = scatterData.map((article) => ({
-      title: article.title,
-      gp: article.meta.gp,
-      view: article.meta.view,
-    }));
-
-    this.options.dataset.source = scatterData;
-    console.log(this.options.dataset.source);
+  watch: {
+    inputData(newData) {
+      console.log(newData);
+      this.options.dataset.source = newData;
+    },
   },
 };
 </script>

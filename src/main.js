@@ -14,6 +14,7 @@ import 'echarts/lib/component/dataset';
 import 'echarts/lib/component/tooltip';
 import 'echarts/lib/component/dataZoom';
 import 'echarts/lib/component/legend';
+import store from './store';
 
 Vue.prototype._ = _;
 Vue.component('v-chart', ECharts);
@@ -21,5 +22,6 @@ Vue.config.productionTip = false;
 
 new Vue({
   router,
+  store,
   render: (h) => h(App),
 }).$mount('#app');

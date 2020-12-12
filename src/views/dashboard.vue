@@ -34,13 +34,30 @@
               <option value="view">瀏覽數</option>
               <option value="gp">GP數</option>
             </select>
-            <span class="card-title">圖表 </span>
+            圖表，依照
             <select class="form-select" v-model="barchart.dataOrderBy">
               <option value="default">預設排列</option>
-              <option value="view">依觀看數排列</option>
-              <option value="gp">依gp排列</option>
+              <option value="view">觀看數排列</option>
+              <option value="gp">gp排列</option>
             </select>
+            顯示
+            <select class="form-select" v-model.number="barchart.dataLength">
+              <option value="10">前10筆</option>
+              <option value="30">前30筆</option>
+              <option value="50">前50筆</option>
+              <option value="100">前100筆</option>
+              <option value="-1">全部</option>
+            </select>
+
+            <input type="checkbox" class="form-checkbox" v-model="barchart.dataCap">
+            去掉資料
+            <select class="form-select" v-model="barchart.dataCapType">
+              <option value="less">小於</option>
+              <option value="more">大於</option>
+            </select>
+            <input type="number" class="form-input" min="0" v-model.number="barchart.dataCapValue">
           </div>
+
           <bar-chart :inputData="barChartDataset" v-if="articlesData.length > 0"></bar-chart>
         </div>
       </div>
@@ -69,6 +86,10 @@ export default {
       barchart: {
         dataType: 'view',
         dataOrderBy: 'default',
+        dataLength: -1,
+        dataCap: false,
+        dataCapValue: 0,
+        dataCapType: 'less',
       },
     };
   },
@@ -85,11 +106,24 @@ export default {
   computed: {
     barChartDataset() {
       const vm = this;
-      const { dataType, dataOrderBy } = vm.barchart;
+      const {
+        dataType, dataOrderBy, dataLength, dataCap, dataCapType, dataCapValue,
+      } = vm.barchart;
 
       let dataset = vm._.cloneDeep(vm.articlesData);
+      // 有設定數值漏斗
+      if (dataCap) {
+        if (dataCapType === 'less') {
+          dataset = dataset.filter((item) => item.meta[dataType] >= dataCapValue);
+        } else {
+          dataset = dataset.filter((item) => item.meta[dataType] <= dataCapValue);
+        }
+      }
       // 有設定排序類型
       if (dataOrderBy !== 'default') dataset.sort((a, b) => b.meta[dataOrderBy] - a.meta[dataOrderBy]);
+      // 有設定顯示筆數
+      if (dataLength !== -1) dataset = dataset.slice(0, dataLength);
+
       dataset = [
         ['title', dataType],
         ...dataset.map((article) => [article.title, article.meta[dataType]]),

@@ -1,16 +1,16 @@
 .form-inline{
     .form-input,.form-select{
         display: inline-block;
-        margin-right: 0.5rem;
+        // margin-right: 0.5rem;
     }
 }
 
 .form-input,.form-select{
     display: block;
     font-size: 1rem;
-    border: 1px solid $color-gray;
+    border: none;
+    border-bottom: 2px solid $color-primary;
     outline: none;
-    border-radius: 5px;
     padding: .5rem;
 }
 

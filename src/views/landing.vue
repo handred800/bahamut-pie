@@ -1,11 +1,14 @@
 <template>
   <div class="landing-page">
-    <form class="card" @submit.prevent="searchUser">
-      <div class="form-inline">
-        <input type="text" class="form-input" placeholder="請輸入巴哈ID" v-model="ownerId" required/>
-        <button type="submit" class="btn btn-primary">上車！</button>
-      </div>
-    </form>
+    <el-form class="card" :inline="true">
+      <el-form-item>
+        <el-input type="text" placeholder="請輸入巴哈ID" v-model="ownerId" :required="true"></el-input>
+        <!-- <input type="text" placeholder="請輸入巴哈ID" v-model="ownerId" required/> -->
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary" @click="searchUser">上車！</el-button>
+      </el-form-item>
+    </el-form>
   </div>
 </template>
 

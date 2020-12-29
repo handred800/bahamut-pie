@@ -6,7 +6,7 @@
         <!-- <input type="text" placeholder="請輸入巴哈ID" v-model="ownerId" required/> -->
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="searchUser">上車！</el-button>
+        <el-button type="primary" @click="searchUser" :loading="isLoading">上車！</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -21,7 +21,12 @@ export default {
   },
   methods: {
     searchUser() {
-      this.$emit('search', this.ownerId);
+      this.$store.dispatch('fetchUser', this.ownerId);
+    },
+  },
+  computed: {
+    isLoading() {
+      return this.$store.state.isLoading;
     },
   },
 };

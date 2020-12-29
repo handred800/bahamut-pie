@@ -21,13 +21,15 @@
 
 <script>
 export default {
-  props: ['articlesData'],
   data() {
     return {
       keyword: '',
     };
   },
   computed: {
+    articlesData() {
+      return this._.cloneDeep(this.$store.state.allData);
+    },
     articleListFilted() {
       const vm = this;
       const articles = vm._.cloneDeep(vm.articlesData);

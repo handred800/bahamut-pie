@@ -23,7 +23,6 @@ import transferBox from '../components/transferBox.vue';
 import pieChart from '../components/chartPie.vue';
 
 export default {
-  props: ['articlesData'],
   components: { transferBox, pieChart },
   data() {
     return {
@@ -47,6 +46,11 @@ export default {
   methods: {
     createGroup(temp) {
       console.log(temp);
+    },
+  },
+  computed: {
+    articlesData() {
+      return this._.cloneDeep(this.$store.state.allData);
     },
   },
   watch: {

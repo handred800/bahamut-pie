@@ -9,19 +9,40 @@
     <transfer-box :inputData="other" @returnData="createGroup"></transfer-box>
   </el-dialog>
   <el-button type="primary" @click="dialogVisible = true">建立群組</el-button>
+  <div class="row">
+    <div class="col-33" v-for="(value, name, index) in totalDataset" :key="name + index">
+      <div class="card chart-container">
+        <pie-chart :inputData="value"></pie-chart>
+      </div>
+    </div>
+  </div>
 </div>
 </template>
 <script>
 import transferBox from '../components/transferBox.vue';
+import pieChart from '../components/chartPie.vue';
 
 export default {
-  props: ['articlesData'],
-  components: { transferBox },
+  components: { transferBox, pieChart },
   data() {
     return {
       dialogVisible: false,
       other: [],
       groups: {},
+      totalDataset: {
+        count: [
+          ['其他', 30],
+          ['group1', 8],
+        ],
+        gp: [
+          ['其他', 60],
+          ['group1', 40],
+        ],
+        view: [
+          ['其他', 1500],
+          ['group1', 850],
+        ],
+      },
     };
   },
   methods: {
@@ -35,7 +56,7 @@ export default {
         const target = vm.other.splice(targetIndex, 1);
         tempGroup.push(...target);
       });
-
+      console.log(tempGroup);
       vm.$set(vm.groups, tempName, tempGroup);
     },
     deleteGroup(groupName) {
@@ -44,13 +65,21 @@ export default {
       this.$delete(this.groups, groupName);
     },
   },
-  watch: {
+  computed: {
     articlesData() {
-      this.other = this._.cloneDeep(this.articlesData);
+      return this._.cloneDeep(this.$store.state.allData);
     },
   },
+  // watch: {
+  //   articlesData: {
+  //     immediate: true,
+  //     handler() {
+  //       this.other = this.articlesData;
+  //     },
+  //   },
+  // },
   created() {
-    this.other = this._.cloneDeep(this.articlesData);
+    this.other = this.articlesData;
   },
 };
 </script>

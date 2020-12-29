@@ -1,11 +1,14 @@
 <template>
   <div class="landing-page">
-    <form class="card" @submit.prevent="searchUser">
-      <div class="form-inline">
-        <input type="text" class="form-input" placeholder="請輸入巴哈ID" v-model="ownerId" required/>
-        <el-button type="primary">上車！</el-button>
-      </div>
-    </form>
+    <el-form class="card" :inline="true">
+      <el-form-item>
+        <el-input type="text" placeholder="請輸入巴哈ID" v-model="ownerId" :required="true"></el-input>
+        <!-- <input type="text" placeholder="請輸入巴哈ID" v-model="ownerId" required/> -->
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary" @click="searchUser" :loading="isLoading">上車！</el-button>
+      </el-form-item>
+    </el-form>
   </div>
 </template>
 
@@ -13,14 +16,17 @@
 export default {
   data() {
     return {
-      isLoading: false,
       ownerId: '',
     };
   },
   methods: {
     searchUser() {
-      this.isLoading = true;
-      this.$emit('search', this.ownerId);
+      this.$store.dispatch('fetchUser', this.ownerId);
+    },
+  },
+  computed: {
+    isLoading() {
+      return this.$store.state.isLoading;
     },
   },
 };

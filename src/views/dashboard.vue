@@ -77,7 +77,7 @@ import barChart from '../components/chartBar.vue';
 import scatterChart from '../components/chartScatter.vue';
 
 export default {
-  props: ['articlesData'],
+  // props: ['articlesData'],
   mixins: [uitil],
   components: { barChart, scatterChart },
   data() {
@@ -104,13 +104,16 @@ export default {
     },
   },
   computed: {
+    articlesData() {
+      return this._.cloneDeep(this.$store.state.allData);
+    },
     barChartDataset() {
       const vm = this;
       const {
         dataType, dataOrderBy, dataLength, dataCap, dataCapType, dataCapValue,
       } = vm.barchart;
 
-      let dataset = vm._.cloneDeep(vm.articlesData);
+      let dataset = vm.articlesData;
       // 有設定數值漏斗
       if (dataCap) {
         if (dataCapType === 'less') {
@@ -132,7 +135,7 @@ export default {
       return dataset;
     },
     scatterDataset() {
-      let dataset = this._.cloneDeep(this.articlesData);
+      let dataset = this.articlesData;
       dataset = dataset.map((article) => ({
         title: article.title,
         gp: article.meta.gp,
@@ -143,12 +146,15 @@ export default {
     },
   },
   watch: {
-    articlesData() {
-      this.totalMeta = this.calculateMeta(this.articlesData);
+    articlesData: {
+      immediate: true,
+      handler() {
+        this.totalMeta = this.calculateMeta(this.articlesData);
+      },
     },
   },
-  created() {
-    this.totalMeta = this.calculateMeta(this.articlesData);
-  },
+  // created() {
+  //   this.totalMeta = this.calculateMeta(this.articlesData);
+  // },
 };
 </script>

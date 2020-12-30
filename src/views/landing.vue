@@ -29,5 +29,9 @@ export default {
       return this.$store.state.isLoading;
     },
   },
+  created() {
+    const allData = sessionStorage.getItem('cacheData');
+    if (allData) this.$store.commit('setData', JSON.parse(allData));
+  },
 };
 </script>

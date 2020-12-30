@@ -23,6 +23,18 @@ Vue.use(ElementUI);
 Vue.component('v-chart', ECharts);
 Vue.config.productionTip = false;
 
+router.beforeEach((to, from, next) => {
+  if (to.meta.needId) {
+    if (store.state.allData.length === 0) {
+      next('/');
+    } else {
+      next();
+    }
+  } else {
+    next();
+  }
+});
+
 new Vue({
   router,
   store,

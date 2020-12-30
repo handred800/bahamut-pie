@@ -1,6 +1,6 @@
 <template>
 <div>
-  <div class="row">
+  <div class="row" v-if="_.keys(groups).length > 1">
     <div class="col-33" v-for="(value, name, index) in totalDataset" :key="name + index">
       <div class="card chart-container">
         {{ $store.state.dictionary[name] }}
@@ -17,9 +17,9 @@
     <div v-for="(groupArticles, groupName) in groups" :key="groupName" class="col-33">
       <div class="card">
         <h3>{{groupName}}(共{{groupArticles.length}}篇)</h3>
-        <!-- <ul>
+        <ul>
           <li v-for="article in groupArticles" :key="article.id">{{article.title}}</li>
-        </ul> -->
+        </ul>
         <el-button type="danger" @click="deleteGroup(groupName)" v-if="groupName !== '其他'">刪除群組</el-button>
       </div>
     </div>

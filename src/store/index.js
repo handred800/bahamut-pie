@@ -35,6 +35,7 @@ export default new Vuex.Store({
       fetch(`https://bahamut-home-article-cralwer.herokuapp.com?owner=${payload}`)
         .then((res) => res.json())
         .then(({ data }) => {
+          sessionStorage.setItem('cacheData', JSON.stringify(data));
           commit('setData', data);
           commit('setIsLoading', false);
         });

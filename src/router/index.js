@@ -11,18 +11,22 @@ const routes = [
   {
     path: '/',
     component: () => import('../views/landing.vue'),
+    meta: { needId: false },
   },
   {
     path: '/dashboard',
     component: () => import('../views/dashboard.vue'),
+    meta: { needId: true },
   },
   {
     path: '/articles',
     component: () => import('../views/articles.vue'),
+    meta: { needId: true },
   },
   {
     path: '/playground',
     component: () => import('../views/playground.vue'),
+    meta: { needId: true },
   },
 ];
 

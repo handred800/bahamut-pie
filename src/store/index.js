@@ -6,6 +6,12 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
+    dictionary: {
+      count: '數量',
+      coin: '巴幣',
+      gp: 'GP',
+      view: '觀看數',
+    },
     allData: [],
     ownerId: '',
     isLoading: false,

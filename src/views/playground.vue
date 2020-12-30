@@ -1,18 +1,26 @@
 <template>
 <div>
-  <ul v-for="(groupArticles, groupName) in groups" :key="groupName">
-    <h3>{{groupName}}</h3>
-    <li v-for="article in groupArticles" :key="article.id">{{article.title}}</li>
-    <el-button type="danger" @click="deleteGroup(groupName)">刪除群組</el-button>
-  </ul>
-  <el-dialog title="建立群組" :visible.sync="dialogVisible" width="80%" :destroy-on-close="true">
-    <transfer-box :inputData="other" @returnData="createGroup"></transfer-box>
-  </el-dialog>
-  <el-button type="primary" @click="dialogVisible = true">建立群組</el-button>
   <div class="row">
     <div class="col-33" v-for="(value, name, index) in totalDataset" :key="name + index">
       <div class="card chart-container">
+        {{ $store.state.dictionary[name] }}
         <pie-chart :inputData="value"></pie-chart>
+      </div>
+    </div>
+  </div>
+  <el-button type="primary" @click="dialogVisible = true">建立群組</el-button>
+  <el-dialog title="建立群組" :visible.sync="dialogVisible" width="80%" :destroy-on-close="true">
+    <transfer-box :inputData="other" @returnData="createGroup"></transfer-box>
+  </el-dialog>
+
+  <div class="row">
+    <div v-for="(groupArticles, groupName) in groups" :key="groupName" class="col-33">
+      <div class="card">
+        <h3>{{groupName}}(共{{groupArticles.length}}篇)</h3>
+        <!-- <ul>
+          <li v-for="article in groupArticles" :key="article.id">{{article.title}}</li>
+        </ul> -->
+        <el-button type="danger" @click="deleteGroup(groupName)" v-if="groupName !== '其他'">刪除群組</el-button>
       </div>
     </div>
   </div>
@@ -29,20 +37,6 @@ export default {
       dialogVisible: false,
       other: [],
       groups: {},
-      totalDataset: {
-        count: [
-          ['其他', 30],
-          ['group1', 8],
-        ],
-        gp: [
-          ['其他', 60],
-          ['group1', 40],
-        ],
-        view: [
-          ['其他', 1500],
-          ['group1', 850],
-        ],
-      },
     };
   },
   methods: {
@@ -60,7 +54,6 @@ export default {
       vm.$set(vm.groups, tempName, tempGroup);
     },
     deleteGroup(groupName) {
-      console.log(this.groups[groupName]);
       this.other = [...this.other, ...this.groups[groupName]];
       this.$delete(this.groups, groupName);
     },
@@ -69,15 +62,37 @@ export default {
     articlesData() {
       return this._.cloneDeep(this.$store.state.allData);
     },
+    totalDataset() {
+      const vm = this;
+      const keynames = ['count', 'gp', 'view'];
+      const totalData = {};
+
+      keynames.forEach((keyname) => {
+        totalData[keyname] = [];
+        vm._.forEach(vm.groups, (groupData, groupname) => {
+          let total = 0;
+          if (keyname === 'count') {
+            total = groupData.length;
+          } else {
+            total = vm._.sumBy(groupData, (item) => item.meta[keyname]);
+            // total = groupData.reduce((totalVal, currentObj) => totalVal + currentObj.meta[keyname], 0);
+          }
+          totalData[keyname].push([groupname, total]);
+        });
+      });
+      console.log(totalData);
+
+      return totalData;
+    },
   },
-  // watch: {
-  //   articlesData: {
-  //     immediate: true,
-  //     handler() {
-  //       this.other = this.articlesData;
-  //     },
-  //   },
-  // },
+  watch: {
+    other: {
+      immediate: true,
+      handler() {
+        this.$set(this.groups, '其他', this.other);
+      },
+    },
+  },
   created() {
     this.other = this.articlesData;
   },

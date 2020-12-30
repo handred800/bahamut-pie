@@ -4,7 +4,7 @@
       <div class="col-25">
         <div class="card">
           <div class="card-meta">文章總數</div>
-          <div class="hero">{{totalMeta.articleLength | currency}}</div>
+          <div class="hero">{{totalMeta.count | currency}}</div>
         </div>
       </div>
       <div class="col-25">
@@ -95,11 +95,12 @@ export default {
   },
   methods: {
     calculateMeta(targetArticles) {
+      const sumFunc = this._.sumBy;
       return {
-        articleLength: targetArticles.length,
-        gp: targetArticles.reduce((totalVal, currentObj) => totalVal + currentObj.meta.gp, 0),
-        coin: targetArticles.reduce((totalVal, currentObj) => totalVal + currentObj.meta.coin, 0),
-        view: targetArticles.reduce((totalVal, currentObj) => totalVal + currentObj.meta.view, 0),
+        count: targetArticles.length,
+        gp: sumFunc(targetArticles, (item) => item.meta.gp),
+        coin: sumFunc(targetArticles, (item) => item.meta.coin),
+        view: sumFunc(targetArticles, (item) => item.meta.view),
       };
     },
   },
@@ -135,8 +136,7 @@ export default {
       return dataset;
     },
     scatterDataset() {
-      let dataset = this.articlesData;
-      dataset = dataset.map((article) => ({
+      const dataset = this.articlesData.map((article) => ({
         title: article.title,
         gp: article.meta.gp,
         view: article.meta.view,
@@ -153,8 +153,5 @@ export default {
       },
     },
   },
-  // created() {
-  //   this.totalMeta = this.calculateMeta(this.articlesData);
-  // },
 };
 </script>

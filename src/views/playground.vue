@@ -1,28 +1,33 @@
 <template>
-<div>
-  <div class="row" v-if="_.keys(groups).length > 1">
-    <div class="col-33" v-for="(value, name, index) in totalDataset" :key="name + index">
-      <div class="card chart-container">
-        {{ $store.state.dictionary[name] }}
-        <pie-chart :inputData="value"></pie-chart>
-      </div>
+<div class="row">
+  <div class="col-33">
+    <div class="card">
+      <el-button icon="el-icon-plus" type="primary" @click="dialogVisible = true">建立群組</el-button>
+      <el-dialog title="建立群組" :visible.sync="dialogVisible" width="80%" :destroy-on-close="true">
+        <transfer-box :inputData="other" :groupsName="allGroupsName" @returnData="createGroup"></transfer-box>
+      </el-dialog>
+
+      <el-collapse>
+        <el-collapse-item :title="`${groupName}(${groupArticles.length}篇)`" v-for="(groupArticles, groupName) in groups" :key="groupName">
+          <el-scrollbar wrapStyle="max-height:300px;">
+            <ul>
+              <li v-for="article in groupArticles" :key="article.id">{{article.title}}</li>
+            </ul>
+          </el-scrollbar>
+          <el-button :type="_.includes(disabledGroups,groupName) ? 'success' : 'danger'" @click="toggleGroup(groupName)">
+            {{ _.includes(disabledGroups,groupName) ? '放回群組' : '抽離群組' }}
+          </el-button>
+          <el-button type="danger" @click="deleteGroup(groupName)" v-if="groupName !== '其他'">刪除群組</el-button>
+        </el-collapse-item>
+      </el-collapse>
     </div>
   </div>
-  <el-button type="primary" @click="dialogVisible = true">建立群組</el-button>
-  <el-dialog title="建立群組" :visible.sync="dialogVisible" width="80%" :destroy-on-close="true">
-    <transfer-box :inputData="other" :groupsName="allGroupsName" @returnData="createGroup"></transfer-box>
-  </el-dialog>
 
-  <div class="row">
-    <div v-for="(groupArticles, groupName) in groups" :key="groupName" class="col-33">
-      <div class="card">
-        <h3 class="card-title">{{groupName}}(共{{groupArticles.length}}篇)</h3>
-        <el-scrollbar wrapStyle="max-height:300px;">
-          <ul>
-            <li v-for="article in groupArticles" :key="article.id">{{article.title}}</li>
-          </ul>
-        </el-scrollbar>
-        <el-button type="danger" @click="deleteGroup(groupName)" v-if="groupName !== '其他'">刪除群組</el-button>
+  <div class="col-66 row" v-if="allGroupsName.length > 1">
+    <div class="col-50" v-for="(value, name, index) in totalDataset" :key="name + index">
+      <div class="card chart-container">
+        <h3 class="card-title">{{ $store.state.dictionary[name] }}</h3>
+        <pie-chart :inputData="value"></pie-chart>
       </div>
     </div>
   </div>
@@ -39,6 +44,7 @@ export default {
       dialogVisible: false,
       other: [],
       groups: {},
+      disabledGroups: [],
     };
   },
   methods: {
@@ -55,8 +61,21 @@ export default {
       vm.$set(vm.groups, tempName, tempGroup);
     },
     deleteGroup(groupName) {
+      const index = this._.indexOf(this.disabledGroups, groupName);
+      if (index !== -1) this.disabledGroups.splice(index, 1);
+
       this.other = [...this.other, ...this.groups[groupName]];
       this.$delete(this.groups, groupName);
+    },
+    toggleGroup(groupName) {
+      const index = this._.indexOf(this.disabledGroups, groupName);
+      if (index !== -1) {
+        console.log('沒有，所以加入');
+        this.disabledGroups.splice(index, 1);
+      } else {
+        console.log('有，所以移除');
+        this.disabledGroups.push(groupName);
+      }
     },
   },
   computed: {
@@ -67,10 +86,17 @@ export default {
       const vm = this;
       const keynames = ['count', 'gp', 'view'];
       const totalData = {};
+      const activeGroups = (() => {
+        const tempGroups = vm._.cloneDeep(vm.groups);
+        vm.disabledGroups.forEach((groupName) => {
+          delete tempGroups[groupName];
+        });
+        return tempGroups;
+      })();
 
       keynames.forEach((keyname) => {
         totalData[keyname] = [];
-        vm._.forEach(vm.groups, (groupData, groupname) => {
+        vm._.forEach(activeGroups, (groupData, groupname) => {
           let total = 0;
           if (keyname === 'count') {
             total = groupData.length;

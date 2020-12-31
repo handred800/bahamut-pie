@@ -24,10 +24,10 @@ export default {
   props: ['inputData', 'groupsName'],
   data() {
     const validateTempName = (rule, value, callback) => {
-      const isDuplicate = this._.indexOf(this.groupsName, value);
+      const isDuplicate = this._.includes(this.groupsName, value);
 
       if (value === '') return callback(new Error('請輸入群組名稱'));
-      if (isDuplicate !== -1) {
+      if (isDuplicate) {
         return callback(new Error('群組名稱不能重複'));
       }
       return callback();

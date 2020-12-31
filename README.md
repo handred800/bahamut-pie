@@ -6,7 +6,6 @@
   - 排版優化
   - playground
     - 可以編輯群組(標題,包含的文章)
-    - 餅圖改成4個共用一個dataset (範例)[https://echarts.apache.org/examples/zh/editor.html?c=dataset-default]
 
 ## 🛠優化項目
 - 取文章資料夾分類(需擴充api)

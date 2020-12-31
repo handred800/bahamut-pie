@@ -1,6 +1,8 @@
 <template>
 <div>
-  <input type="text" class="form-input" placeholder="搜尋關鍵字" v-model="keyword">
+  <el-input v-model="keyword" placeholder="關鍵字">
+    <i slot="prefix" class="el-input__icon el-icon-search"></i>
+  </el-input>
   <span v-if="keyword!==''">找到{{articleListFilted.length}}篇文</span>
   <div v-if="articlesData.length > 0">
     <transition-group name="article-list" class="row">

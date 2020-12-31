@@ -2,7 +2,7 @@
   <div class="landing-page">
     <el-form class="card" :inline="true">
       <el-form-item>
-        <el-input type="text" placeholder="請輸入巴哈ID" v-model="ownerId" :required="true"></el-input>
+        <el-input type="text" placeholder="請輸入巴哈ID" v-model="ownerId" :required="true" @keypress.enter="searchUser"></el-input>
         <!-- <input type="text" placeholder="請輸入巴哈ID" v-model="ownerId" required/> -->
       </el-form-item>
       <el-form-item>

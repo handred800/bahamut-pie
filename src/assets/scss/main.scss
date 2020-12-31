@@ -71,13 +71,6 @@ a {
   }
 }
 
-.side-bar {
-  @media screen and (min-width: 768px) {
-    height: calc(100vh - 60px);
-    overflow-y: scroll;
-  }
-}
-
 .hero{
   font-size: 1.5rem;
   font-weight: bold;
@@ -85,6 +78,7 @@ a {
 }
 
 
+// articles 搜尋轉場
 .article-list{
   transition: all .3s;
 }

@@ -10,16 +10,18 @@
   </div>
   <el-button type="primary" @click="dialogVisible = true">建立群組</el-button>
   <el-dialog title="建立群組" :visible.sync="dialogVisible" width="80%" :destroy-on-close="true">
-    <transfer-box :inputData="other" @returnData="createGroup"></transfer-box>
+    <transfer-box :inputData="other" :groupsName="allGroupsName" @returnData="createGroup"></transfer-box>
   </el-dialog>
 
   <div class="row">
     <div v-for="(groupArticles, groupName) in groups" :key="groupName" class="col-33">
       <div class="card">
-        <h3>{{groupName}}(共{{groupArticles.length}}篇)</h3>
-        <ul>
-          <li v-for="article in groupArticles" :key="article.id">{{article.title}}</li>
-        </ul>
+        <h3 class="card-title">{{groupName}}(共{{groupArticles.length}}篇)</h3>
+        <el-scrollbar wrapStyle="max-height:300px;">
+          <ul>
+            <li v-for="article in groupArticles" :key="article.id">{{article.title}}</li>
+          </ul>
+        </el-scrollbar>
         <el-button type="danger" @click="deleteGroup(groupName)" v-if="groupName !== '其他'">刪除群組</el-button>
       </div>
     </div>
@@ -50,7 +52,6 @@ export default {
         const target = vm.other.splice(targetIndex, 1);
         tempGroup.push(...target);
       });
-      console.log(tempGroup);
       vm.$set(vm.groups, tempName, tempGroup);
     },
     deleteGroup(groupName) {
@@ -75,14 +76,15 @@ export default {
             total = groupData.length;
           } else {
             total = vm._.sumBy(groupData, (item) => item.meta[keyname]);
-            // total = groupData.reduce((totalVal, currentObj) => totalVal + currentObj.meta[keyname], 0);
           }
           totalData[keyname].push([groupname, total]);
         });
       });
-      console.log(totalData);
 
       return totalData;
+    },
+    allGroupsName() {
+      return this._.keys(this.groups);
     },
   },
   watch: {

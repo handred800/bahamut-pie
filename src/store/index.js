@@ -13,13 +13,9 @@ export default new Vuex.Store({
       view: '觀看數',
     },
     allData: [],
-    ownerId: '',
     isLoading: false,
   },
   mutations: {
-    setOwnerId(state, payload) {
-      state.ownerId = payload;
-    },
     setIsLoading(state, payload) {
       state.isLoading = payload;
     },
@@ -31,7 +27,6 @@ export default new Vuex.Store({
   actions: {
     fetchUser({ commit }, payload) {
       commit('setIsLoading', true);
-      commit('setOwnerId', payload);
       fetch(`https://bahamut-home-article-cralwer.herokuapp.com?owner=${payload}`)
         .then((res) => res.json())
         .then(({ data }) => {

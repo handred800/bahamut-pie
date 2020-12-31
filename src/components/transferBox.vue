@@ -1,13 +1,13 @@
 <template>
-  <el-form>
-    <el-form-item label="群組名稱">
-      <el-input v-model="transferTempName" placeholder="請輸入群組名稱"></el-input>
+  <el-form :model="transferForm" :rules="rules" ref="form" status-icon>
+    <el-form-item label="群組名稱" prop="tempName">
+      <el-input v-model="transferForm.tempName" placeholder="請輸入群組名稱"></el-input>
     </el-form-item>
     <el-form-item>
-      <el-transfer filterable v-model="transferTemp" :data="transferData" :titles="['可選文章', transferTempName]" filter-placeholder="關鍵字"></el-transfer>
+      <el-transfer filterable v-model="transferTemp" :data="transferData" :titles="['可選文章', transferForm.tempName]" filter-placeholder="關鍵字"></el-transfer>
     </el-form-item>
     <el-form-item>
-      <el-button type="primary" @click="returnTemp" :disabled="transferTempName === '' || transferTemp.length <= 0">新增</el-button>
+      <el-button type="primary" @click="returnTemp" :disabled="transferTemp.length <= 0">新增</el-button>
     </el-form-item>
   </el-form>
 </template>
@@ -21,11 +21,26 @@
 </style>
 <script>
 export default {
-  props: ['inputData'],
+  props: ['inputData', 'groupsName'],
   data() {
+    const validateTempName = (rule, value, callback) => {
+      const isDuplicate = this._.indexOf(this.groupsName, value);
+
+      if (value === '') return callback(new Error('請輸入群組名稱'));
+      if (isDuplicate !== -1) {
+        return callback(new Error('群組名稱不能重複'));
+      }
+      return callback();
+    };
+
     return {
+      transferForm: {
+        tempName: '',
+      },
+      rules: {
+        tempName: [{ validator: validateTempName, trigger: 'blur' }],
+      },
       transferTemp: [],
-      transferTempName: '',
     };
   },
   computed: {
@@ -39,7 +54,9 @@ export default {
   },
   methods: {
     returnTemp() {
-      this.$emit('returnData', this.transferTemp, this.transferTempName);
+      this.$refs.form.validate((valid) => {
+        if (valid) this.$emit('returnData', this.transferTemp, this.transferForm.tempName);
+      });
     },
   },
 };

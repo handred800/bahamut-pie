@@ -1,39 +1,14 @@
-.form-inline{
-    .form-input,.form-select{
-        display: inline-block;
-        // margin-right: 0.5rem;
-    }
+.el-dialog__body{
+  padding: 20px;
+  padding-top: 0;
 }
 
-.form-input,.form-select{
-    display: block;
-    font-size: 1rem;
-    border: none;
-    border-bottom: 2px solid $color-primary;
-    outline: none;
-    padding: .5rem;
+.el-button{
+  font-family: "HunInn","微軟正黑體";
+  padding: 10px 12px;
+  font-size: 1rem;
 }
 
-.btn {
-    font-size: 1rem;
-    font-family: "Noto Sans TC", sans-serif;
-    padding: 0.3rem 1rem;
-    background-color: $color-gray;
-    border-radius: 5px;
-    border: none;
-    outline: none;
-    transition: background-color 0.15s;
-    cursor: pointer;
-  
-    &.btn-primary {
-      color: #fff;
-      background-color: $color-secondary;
-      &:hover,
-      &:focus {
-        background-color: darken($color-secondary, 10%);
-      }
-      &:active {
-        background-color: $color-primary;
-      }
-    }
-  }
+.el-scrollbar{
+  margin: .5rem 0;
+}

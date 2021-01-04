@@ -10,7 +10,7 @@
 	url(https://cdn.jsdelivr.net/gh/marsnow/open-huninn-font@1.1/font/jf-openhuninn.svg#SealmemoryHeader) format("svg"); /* Legacy iOS */
 }
 
-@import "./_form.scss";
+@import "./_el-overwrite.scss";
 
 body,
 html {
@@ -21,6 +21,16 @@ html {
 a {
   text-decoration: none;
   color: $color-primary;
+}
+
+ul.list{
+  li{
+    line-height: 1.5;
+    padding: 0.5rem 0;
+    &:not(:last-child){
+      border-bottom: 1px solid lighten($color-gray, 25%);
+    }
+  }
 }
 
 .nav {
@@ -41,12 +51,16 @@ a {
   box-shadow: 0 2px 20px -3px rgba($color-primary, 0.2);
   padding: 10px;
   border-radius: 8px;
-  transition: box-shadow 0.2s;
+  transition: 0.2s;
   margin-bottom: 1rem;
   &.card-hoverable {
     &:hover {
-      box-shadow: 0 2px 10px -5px rgba($color-secondary, 0.5);
+      box-shadow: 0 0 10px -5px rgba($color-secondary, 0.7);
     }
+  }
+  &.card-muted{
+    color: $color-gray;
+    box-shadow: 0 0 0 0 transparent;
   }
   .card-title {
     font-size: 1.15rem;
@@ -58,6 +72,20 @@ a {
       display: inline-block;
       margin-right: 0.6rem;
     }
+  }
+}
+
+.btn-placeholder{
+  color: $color-gray;
+  border: 2px dashed;
+  padding: 10px;
+  border-radius: 8px;
+  text-align: center;
+  cursor: pointer;
+  transition: .2s;
+  &:hover{
+    color: $color-primary;
+    background-color: rgba($color-primary,.1);
   }
 }
 

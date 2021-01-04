@@ -42,6 +42,7 @@ export default {
         yAxis:
         {
           type: 'value',
+          name: this.$store.state.dictionary[this.inputData[0][1]],
         },
         dataset: {
           source: this.inputData,

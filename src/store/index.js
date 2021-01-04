@@ -21,7 +21,6 @@ export default new Vuex.Store({
     },
     setData(state, payload) {
       state.allData = payload;
-      router.push('/dashboard');
     },
   },
   actions: {
@@ -33,6 +32,7 @@ export default new Vuex.Store({
           sessionStorage.setItem('cacheData', JSON.stringify(data));
           commit('setData', data);
           commit('setIsLoading', false);
+          router.push('/dashboard');
         });
     },
   },

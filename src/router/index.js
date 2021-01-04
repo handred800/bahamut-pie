@@ -11,22 +11,22 @@ const routes = [
   {
     path: '/',
     component: () => import('../views/landing.vue'),
-    meta: { needId: false },
+    meta: { needData: false },
   },
   {
     path: '/dashboard',
     component: () => import('../views/dashboard.vue'),
-    meta: { needId: true },
+    meta: { needData: true },
   },
   {
     path: '/articles',
     component: () => import('../views/articles.vue'),
-    meta: { needId: true },
+    meta: { needData: true },
   },
   {
     path: '/playground',
     component: () => import('../views/playground.vue'),
-    meta: { needId: true },
+    meta: { needData: true },
   },
 ];
 

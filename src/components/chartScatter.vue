@@ -29,9 +29,11 @@ export default {
         xAxis: {
           type: 'value',
           minInterval: 1,
+          name: 'GP',
         },
         yAxis: {
           type: 'value',
+          name: '觀看數',
         },
         dataset: {
           source: this.inputData,

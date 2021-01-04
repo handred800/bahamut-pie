@@ -24,9 +24,15 @@ Vue.component('v-chart', ECharts);
 Vue.config.productionTip = false;
 
 router.beforeEach((to, from, next) => {
-  if (to.meta.needId) {
+  if (to.meta.needData) {
     if (store.state.allData.length === 0) {
-      next('/');
+      const allData = sessionStorage.cacheData ? JSON.parse(sessionStorage.cacheData) : [];
+      if (allData.length === 0) {
+        next('/');
+      } else {
+        store.commit('setData', allData);
+        next();
+      }
     } else {
       next();
     }

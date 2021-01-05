@@ -61,7 +61,6 @@ export default {
   },
   watch: {
     inputData(newData) {
-      console.log(newData);
       this.options.dataset.source = newData;
     },
   },

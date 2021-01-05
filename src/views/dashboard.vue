@@ -68,6 +68,29 @@
         </div>
       </div>
     </div>
+    <div class="row">
+      <div class="col-auto">
+        <div class="card chart-container calendar-container">
+          <div class="card-title">文章年表</div>
+          <el-select
+            v-model="calendarchart.sessionRange"
+            filterable
+            placeholder="請選擇年分"
+            no-match-text="查無年分"
+            no-data-text="年分錯誤">
+            <el-option
+            v-for="option in calendarchart.options"
+            :value="option.toString()"
+            :label="option"
+            :key="option">
+            </el-option>
+          </el-select>
+          <calendar-chart :inputData="calenderDataset" :sessionRange="calendarchart.sessionRange" v-if="articlesData.length > 0"></calendar-chart>
+          <p>年總數：{{calenderDataset.length}}篇</p>
+          <p>月平均：{{_.round(calenderDataset.length / 12, 1)}}篇</p>
+        </div>
+      </div>
+    </div>
   </section>
 </template>
 
@@ -75,11 +98,12 @@
 import uitil from '../uitil.vue';
 import barChart from '../components/chartBar.vue';
 import scatterChart from '../components/chartScatter.vue';
+import calendarChart from '../components/chartCalendar.vue';
 
 export default {
   // props: ['articlesData'],
   mixins: [uitil],
-  components: { barChart, scatterChart },
+  components: { barChart, scatterChart, calendarChart },
   data() {
     return {
       totalMeta: {},
@@ -90,6 +114,10 @@ export default {
         dataCap: false,
         dataCapValue: 0,
         dataCapType: 'less',
+      },
+      calendarchart: {
+        options: [],
+        sessionRange: '',
       },
     };
   },
@@ -136,12 +164,20 @@ export default {
       return dataset;
     },
     scatterDataset() {
-      const dataset = this.articlesData.map((article) => ({
+      return this.articlesData.map((article) => ({
         title: article.title,
         gp: article.meta.gp,
         view: article.meta.view,
       }));
-
+    },
+    calenderDataset() {
+      const vm = this;
+      let dataset = this.articlesData.map((article) => ([
+        article.meta.date,
+        article.title,
+        article.meta.view,
+      ]));
+      dataset = dataset.filter((item) => vm._.includes(item[0], vm.calendarchart.sessionRange));
       return dataset;
     },
   },
@@ -152,6 +188,17 @@ export default {
         this.totalMeta = this.calculateMeta(this.articlesData);
       },
     },
+  },
+  created() {
+    const nowYear = new Date().getFullYear();
+    this.calendarchart.sessionRange = nowYear.toString();
+    this.calendarchart.options = (() => {
+      const options = [];
+      for (let i = 1996; i <= nowYear; i += 1) {
+        options.push(i);
+      }
+      return options.reverse();
+    })();
   },
 };
 </script>

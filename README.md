@@ -3,8 +3,7 @@
 ## 📝TODO
 - 設計landing page
 - playground 
-  - playground
-    - 可以編輯群組(標題,包含的文章)
+  - 可以編輯群組(標題,包含的文章)
 
 ## 🛠優化項目
 - 取文章資料夾分類(需擴充api)

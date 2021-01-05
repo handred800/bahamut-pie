@@ -45,6 +45,30 @@ ul.list{
   }
 }
 
+.landing-page{
+  background: $color-primary;
+  background: linear-gradient(315deg, $color-primary 10%, $color-secondary 110%);
+  display: flex;
+  padding: 15px;
+  height: 100vh;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+
+  .logo{
+    
+  }
+
+  .landing-panel{
+    width: 100%;
+  }
+  @media screen and (min-width: 769px) {
+    .landing-panel{
+      max-width: 580px;
+    }
+  }
+}
+
 .card {
   display: block;
   background-color: #fff;
@@ -90,13 +114,17 @@ ul.list{
 }
 
 .chart-container {
-  height: 500px;
+  min-height: 500px;
   padding: 30px;
   box-sizing: border-box;
   .echarts {
     width: 100%;
-    height: calc(100% - 37px);
+    // height: calc(100% - 30px);
   }
+}
+
+.calendar-container>.echarts{
+  height: 330px;
 }
 
 .hero{

@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <div class="nav">
+    <div class="nav" v-if="$router.currentRoute.path !== '/'">
       <router-link to="/dashboard">儀表板</router-link> |
       <router-link to="/articles">文章</router-link> |
       <router-link to="/playground">Playground</router-link>

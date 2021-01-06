@@ -33,6 +33,10 @@ ul.list{
   }
 }
 
+.float-right{
+  float: right;
+}
+
 .nav {
   text-align: center;
   padding: 1rem;
@@ -61,6 +65,7 @@ ul.list{
 
   .landing-panel{
     width: 100%;
+    
   }
   @media screen and (min-width: 769px) {
     .landing-panel{
@@ -72,9 +77,9 @@ ul.list{
 .card {
   display: block;
   background-color: #fff;
-  box-shadow: 0 2px 20px -3px rgba($color-primary, 0.2);
-  padding: 10px;
-  border-radius: 8px;
+  box-shadow: 0 2px 20px -5px rgba($color-primary, 0.3);
+  padding: 12px;
+  border-radius: $border-radius;
   transition: 0.2s;
   margin-bottom: 1rem;
   &.card-hoverable {
@@ -99,11 +104,31 @@ ul.list{
   }
 }
 
+.card-with-icon{
+  display: flex;
+  .card-icon{
+    font-size: 2.2rem;
+    color: $color-primary;
+    padding: .5rem;
+    padding-right: 1rem;
+    &::before{
+      position: relative;
+      display: block;
+      margin: auto;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+  }
+  .card-content{
+
+  }
+}
+
 .btn-placeholder{
   color: $color-gray;
   border: 2px dashed;
-  padding: 10px;
-  border-radius: 8px;
+  padding: 12px;
+  border-radius: $border-radius;
   text-align: center;
   cursor: pointer;
   transition: .2s;
@@ -145,4 +170,14 @@ ul.list{
 .article-list-enter, .article-list-leave-to{
   opacity: 0;
   transform: translateY(30px);
+}
+
+// playground
+.bg-nodata{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  min-height: 400px;
+  color: $color-gray;
 }

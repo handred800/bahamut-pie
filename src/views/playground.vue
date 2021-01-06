@@ -66,13 +66,18 @@
     </div>
   </div>
 
-  <div class="col-66 row" v-if="allGroupsName.length > 1">
-    <div class="col-50" v-for="(value, name, index) in totalDataset" :key="name + index">
-      <div class="card chart-container">
-        <h3 class="card-title">{{ $store.state.dictionary[name] }}</h3>
-        <pie-chart :inputData="value"></pie-chart>
+  <div class="col-66">
+
+    <div class="row">
+      <div class="col-50" v-for="(value, name, index) in totalDataset" :key="name + index">
+        <div class="card chart-container">
+          <h3 class="card-title">{{ $store.state.dictionary[name] }}</h3>
+          <pie-chart v-if="allGroupsName.length > 1" :inputData="value"></pie-chart>
+          <div v-else class="bg-nodata">沒有群組資料</div>
+        </div>
       </div>
     </div>
+
   </div>
 </div>
 </template>

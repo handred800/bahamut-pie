@@ -42,7 +42,6 @@ export default {
         yAxis:
         {
           type: 'value',
-          name: this.$store.state.dictionary[this.inputData[0][1]],
         },
         dataset: {
           source: this.inputData,
@@ -61,10 +60,14 @@ export default {
     };
   },
   watch: {
-    inputData(newData) {
-      this.options.dataset.source = newData;
-      const allData = newData.slice(1, -1);
-      this.options.yAxis.max = Math.max(...allData.map((item) => item[1]));
+    inputData: {
+      immediate: true,
+      handler(newData) {
+        this.options.dataset.source = newData;
+        const allData = newData.slice(1, -1);
+        this.options.yAxis.max = Math.max(...allData.map((item) => item[1]));
+        this.options.yAxis.name = this.$store.state.dictionary[this.inputData[0][1]];
+      },
     },
   },
 };

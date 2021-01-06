@@ -1,61 +1,61 @@
 <template>
   <section>
     <div class="row">
-      <div class="col-25">
-        <div class="card">
-          <div class="card-meta">文章總數</div>
-          <div class="hero">{{totalMeta.count | currency}}</div>
-        </div>
-      </div>
-      <div class="col-25">
-        <div class="card">
-          <div class="card-meta">總觀看數</div>
-          <div class="hero">{{totalMeta.view | currency}}</div>
-        </div>
-      </div>
-      <div class="col-25">
-        <div class="card">
-          <div class="card-meta">總GP數</div>
-          <div class="hero">{{totalMeta.gp | currency}}</div>
-        </div>
-      </div>
-      <div class="col-25">
-        <div class="card">
-          <div class="card-meta">總巴幣</div>
-          <div class="hero">{{totalMeta.coin | currency}}</div>
+      <div class="col-25" v-for="(val,name,index) in totalMeta" :key="name+index">
+        <div class="card card-with-icon">
+          <i class="card-icon" :class="['el-icon-document-copy','el-icon-view','el-icon-star-off','el-icon-coin'][index]"></i>
+          <div class="card-content">
+            <div class="card-meta">總{{$store.state.dictionary[name]}}</div>
+            <div class="hero">{{val | currency}}</div>
+          </div>
         </div>
       </div>
     </div>
     <div class="row">
       <div class="col-50">
         <div class="card chart-container">
-          <div class="form-inline">
-            <select class="form-select" v-model="barchart.dataType">
-              <option value="view">瀏覽數</option>
-              <option value="gp">GP數</option>
-            </select>
-            圖表，依照
-            <select class="form-select" v-model="barchart.dataOrderBy">
-              <option value="default">預設排列</option>
-              <option value="view">觀看數排列</option>
-              <option value="gp">gp排列</option>
-            </select>
-            顯示
-            <select class="form-select" v-model.number="barchart.dataLength">
-              <option value="10">前10筆</option>
-              <option value="30">前30筆</option>
-              <option value="50">前50筆</option>
-              <option value="100">前100筆</option>
-              <option value="-1">全部</option>
-            </select>
-
-            <input type="checkbox" class="form-checkbox" v-model="barchart.dataCap">
-            去掉資料
-            <select class="form-select" v-model="barchart.dataCapType">
-              <option value="less">小於</option>
-              <option value="more">大於</option>
-            </select>
-            <input type="number" class="form-input" min="0" v-model.number="barchart.dataCapValue">
+          <div class="card-title">
+            {{$store.state.dictionary[barchartFilterConfig.dataType]}}圖表
+            <el-popover title="資料篩選" trigger="click" width="300" placement="right-start">
+              <el-button class="float-right" icon="el-icon-setting" @click="dialogBarchart = true;" slot="reference"></el-button>
+              <el-form size="mini" label-position="top">
+                <el-form-item>
+                  <el-select v-model="barchartFilterConfig.dataType">
+                    <el-option value="view" label="觀看數圖表"></el-option>
+                    <el-option value="gp" label="GP圖表"></el-option>
+                  </el-select>
+                </el-form-item>
+                <el-form-item label="排列依據">
+                  <el-select v-model="barchartFilterConfig.dataSortBy">
+                    <el-option value="default" label="預設排列"></el-option>
+                    <el-option value="view" label="觀看數排列"></el-option>
+                    <el-option value="gp" label="gp排列"></el-option>
+                  </el-select>
+                </el-form-item>
+                <el-form-item label="顯示筆數">
+                  <el-select v-model.number="barchartFilterConfig.dataLength">
+                    <el-option :value="-1" label="全部"></el-option>
+                    <el-option :value="10" label="前10筆"></el-option>
+                    <el-option :value="30" label="前30筆"></el-option>
+                    <el-option :value="50" label="前50筆"></el-option>
+                    <el-option :value="100" label="前100筆"></el-option>
+                  </el-select>
+                </el-form-item>
+                <el-form-item>
+                  <el-switch v-model="barchartFilterConfig.dataRange" active-text="套用區間"></el-switch>
+                </el-form-item>
+                <el-form-item>
+                  <el-col :span="11">
+                    <el-input-number controls-position="right" :min="0" v-model="barchartFilterConfig.dataRangeMin"></el-input-number>
+                  </el-col>
+                  <el-col :span="2"> ~ </el-col>
+                  <el-col :span="11">
+                    <el-input-number controls-position="right" :min="barchartFilterConfig.dataRangeMin" v-model="barchartFilterConfig.dataRangeMax"></el-input-number>
+                  </el-col>
+                </el-form-item>
+                <el-button size="small" @click="resetChaetConfig('barchartFilterConfig')">重置</el-button>
+              </el-form>
+            </el-popover>
           </div>
 
           <bar-chart :inputData="barChartDataset" v-if="articlesData.length > 0"></bar-chart>
@@ -106,15 +106,8 @@ export default {
   components: { barChart, scatterChart, calendarChart },
   data() {
     return {
-      totalMeta: {},
-      barchart: {
-        dataType: 'view',
-        dataOrderBy: 'default',
-        dataLength: -1,
-        dataCap: false,
-        dataCapValue: 0,
-        dataCapType: 'less',
-      },
+      dialogBarchart: false,
+      barchartFilterConfig: {},
       calendarchart: {
         options: [],
         sessionRange: '',
@@ -122,37 +115,37 @@ export default {
     };
   },
   methods: {
-    calculateMeta(targetArticles) {
-      const sumFunc = this._.sumBy;
-      return {
-        count: targetArticles.length,
-        gp: sumFunc(targetArticles, (item) => item.meta.gp),
-        coin: sumFunc(targetArticles, (item) => item.meta.coin),
-        view: sumFunc(targetArticles, (item) => item.meta.view),
-      };
+    resetChaetConfig(chartName) {
+      this[chartName] = this._.cloneDeep(this.$store.state.dashboardConfig[chartName]);
     },
   },
   computed: {
     articlesData() {
       return this._.cloneDeep(this.$store.state.allData);
     },
+    totalMeta() {
+      const sumFunc = this._.sumBy;
+      return {
+        count: this.articlesData.length,
+        view: sumFunc(this.articlesData, (item) => item.meta.view),
+        gp: sumFunc(this.articlesData, (item) => item.meta.gp),
+        coin: sumFunc(this.articlesData, (item) => item.meta.coin),
+      };
+    },
     barChartDataset() {
       const vm = this;
       const {
-        dataType, dataOrderBy, dataLength, dataCap, dataCapType, dataCapValue,
-      } = vm.barchart;
+        dataType, dataSortBy, dataLength, dataRange, dataRangeMin, dataRangeMax,
+      } = vm.barchartFilterConfig;
 
       let dataset = vm.articlesData;
-      // 有設定數值漏斗
-      if (dataCap) {
-        if (dataCapType === 'less') {
-          dataset = dataset.filter((item) => item.meta[dataType] >= dataCapValue);
-        } else {
-          dataset = dataset.filter((item) => item.meta[dataType] <= dataCapValue);
-        }
+      // 有套用數值區間
+      if (dataRange) {
+        dataset = dataset.filter((item) => vm._.inRange(item.meta[dataType], dataRangeMin, dataRangeMax));
       }
       // 有設定排序類型
-      if (dataOrderBy !== 'default') dataset.sort((a, b) => b.meta[dataOrderBy] - a.meta[dataOrderBy]);
+      // if (dataSortBy !== 'default') dataset.sort((a, b) => b.meta[dataSortBy] - a.meta[dataSortBy]);
+      if (dataSortBy !== 'default') dataset = vm._.sortBy(dataset, (item) => item.meta[dataSortBy]).reverse();
       // 有設定顯示筆數
       if (dataLength !== -1) dataset = dataset.slice(0, dataLength);
 
@@ -181,14 +174,6 @@ export default {
       return dataset;
     },
   },
-  watch: {
-    articlesData: {
-      immediate: true,
-      handler() {
-        this.totalMeta = this.calculateMeta(this.articlesData);
-      },
-    },
-  },
   created() {
     const nowYear = new Date().getFullYear();
     this.calendarchart.sessionRange = nowYear.toString();
@@ -199,6 +184,8 @@ export default {
       }
       return options.reverse();
     })();
+
+    this.barchartFilterConfig = this._.cloneDeep(this.$store.state.dashboardConfig.barchartFilterConfig);
   },
 };
 </script>

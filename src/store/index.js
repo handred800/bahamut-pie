@@ -7,10 +7,20 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     dictionary: {
-      count: '數量',
+      count: '文章數',
       coin: '巴幣',
       gp: 'GP',
       view: '觀看數',
+    },
+    dashboardConfig: {
+      barchartFilterConfig: {
+        dataType: 'view',
+        dataSortBy: 'default',
+        dataLength: -1,
+        dataRange: false,
+        dataRangeMin: 0,
+        dataRangeMax: 99999999,
+      },
     },
     allData: [],
     isLoading: false,

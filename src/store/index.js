@@ -15,7 +15,7 @@ export default new Vuex.Store({
     dashboardConfig: {
       barchartFilterConfig: {
         dataType: 'view',
-        dataSortBy: 'default',
+        dataSortBy: 'date',
         dataLength: -1,
         dataRange: false,
         dataRangeMin: 0,

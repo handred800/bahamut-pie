@@ -27,9 +27,9 @@
                 </el-form-item>
                 <el-form-item label="排列依據">
                   <el-select v-model="barchartFilterConfig.dataSortBy">
-                    <el-option value="default" label="預設排列"></el-option>
-                    <el-option value="view" label="觀看數排列"></el-option>
-                    <el-option value="gp" label="gp排列"></el-option>
+                    <el-option value="date" label="時間：新→舊"></el-option>
+                    <el-option value="view" label="觀看數：高→低"></el-option>
+                    <el-option value="gp" label="GP：高→低"></el-option>
                   </el-select>
                 </el-form-item>
                 <el-form-item label="顯示筆數">
@@ -53,7 +53,7 @@
                     <el-input-number controls-position="right" :min="barchartFilterConfig.dataRangeMin" v-model="barchartFilterConfig.dataRangeMax"></el-input-number>
                   </el-col>
                 </el-form-item>
-                <el-button size="small" @click="resetChaetConfig('barchartFilterConfig')">重置</el-button>
+                <el-button size="small" icon="el-icon-refresh" @click="resetChaetConfig('barchartFilterConfig')">重置</el-button>
               </el-form>
             </el-popover>
           </div>
@@ -145,7 +145,11 @@ export default {
       }
       // 有設定排序類型
       // if (dataSortBy !== 'default') dataset.sort((a, b) => b.meta[dataSortBy] - a.meta[dataSortBy]);
-      if (dataSortBy !== 'default') dataset = vm._.sortBy(dataset, (item) => item.meta[dataSortBy]).reverse();
+      if (dataSortBy === 'date') {
+        dataset = vm._.sortBy(dataset, (item) => new Date(item.meta[dataSortBy])).reverse();
+      } else {
+        dataset = vm._.sortBy(dataset, (item) => item.meta[dataSortBy]).reverse();
+      }
       // 有設定顯示筆數
       if (dataLength !== -1) dataset = dataset.slice(0, dataLength);
 

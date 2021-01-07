@@ -12,6 +12,8 @@ export default new Vuex.Store({
       gp: 'GP',
       view: '觀看數',
     },
+    allData: [],
+    isLoading: false,
     dashboardConfig: {
       barchartFilterConfig: {
         dataType: 'view',
@@ -32,8 +34,6 @@ export default new Vuex.Store({
         gpRangeMax: 99999999,
       },
     },
-    allData: [],
-    isLoading: false,
   },
   mutations: {
     setIsLoading(state, payload) {
@@ -41,6 +41,10 @@ export default new Vuex.Store({
     },
     setData(state, payload) {
       state.allData = payload;
+    },
+    clearData(state) {
+      state.allData = [];
+      sessionStorage.clear('cacheData');
     },
   },
   actions: {

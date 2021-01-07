@@ -17,11 +17,41 @@ html {
   font-size: 18px;
   line-height: 1.8rem;
   font-family: "HunInn","微軟正黑體";
-  background-color: #e8f6f2;
+  background-color: $color-primary-light;
 }
 a {
   text-decoration: none;
   color: $color-primary;
+}
+header{
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: #fff;
+  border-bottom: 3px solid $color-primary;
+  z-index: 999;
+  padding: .65rem;
+  
+  .nav{
+    text-align: center;
+    position: relative;
+    .nav-link{
+      display: inline-block;
+      font-size: 1.15rem;
+      color: $color-gray;
+      padding: .3rem 1rem;
+      border-radius: $border-radius;
+      &.active{
+        color: $color-primary;
+        background-color: $color-primary-light;
+      }
+    }
+    .btn-more{
+      position: absolute;
+      right: 0;
+    }
+  }
 }
 
 ul.list{
@@ -36,18 +66,6 @@ ul.list{
 
 .float-right{
   float: right;
-}
-
-.nav {
-  text-align: center;
-  padding: 1rem;
-  font-size: 1.2rem;
-  a {
-    color: $color-gray;
-    &.active {
-      color: $color-primary;
-    }
-  }
 }
 
 .landing-page{
@@ -71,10 +89,6 @@ ul.list{
     border-radius: $border-radius;
     transition: 0.2s;
   }
-
-  @media screen and (min-width: 769px) {
-
-  }
   input{
     font-size: 1rem;
     padding: .3rem .5rem;
@@ -90,10 +104,10 @@ ul.list{
 .card {
   display: block;
   background-color: #fff;
-  box-shadow: 0 2px 20px -5px rgba($color-primary, 0.3);
+  box-shadow: 0 7px 20px -12px rgba($color-primary, 0.5);
   padding: 12px;
   border-radius: $border-radius;
-  transition: 0.2s;
+  transition: 0.3s;
   margin-bottom: 1rem;
   &.card-hoverable {
     &:hover {
@@ -122,7 +136,7 @@ ul.list{
   display: flex;
   .card-icon{
     font-size: 2.2rem;
-    color: $color-primary;
+    color: $color-secondary;
     padding: .5rem;
     padding-right: 1rem;
     &::before{
@@ -155,7 +169,7 @@ ul.list{
 
 .chart-container {
   min-height: 500px;
-  padding: 30px;
+  padding: 25px;
   box-sizing: border-box;
   .echarts {
     width: 100%;

@@ -1,5 +1,5 @@
 <template>
-  <div class="landing-page">
+  <main class="landing-page">
     <div class="landing-panel">
       <form class="landing-searchbar" @submit.prevent="searchUser">
         <input type="text" v-model="ownerId" placeholder="請輸入巴哈ID(帳號)" required>
@@ -12,7 +12,7 @@
         </el-button>
       </form>
     </div>
-  </div>
+  </main>
 </template>
 
 <script>

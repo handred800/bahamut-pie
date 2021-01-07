@@ -1,5 +1,5 @@
 <template>
-<div>
+<main>
   <div class="card">
     <el-input v-model="keyword" placeholder="關鍵字">
       <i slot="prefix" class="el-input__icon el-icon-search"></i>
@@ -21,7 +21,7 @@
     </transition-group>
     <el-backtop></el-backtop>
   </div>
-</div>
+</main>
 </template>
 
 <script>

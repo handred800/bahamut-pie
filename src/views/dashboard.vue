@@ -1,5 +1,5 @@
 <template>
-  <section>
+  <main>
     <div class="row">
       <div class="col-25" v-for="(val,name,index) in totalMeta" :key="name+index">
         <div class="card card-with-icon">
@@ -150,7 +150,7 @@
         </div>
       </div>
     </div>
-  </section>
+  </main>
 </template>
 
 <script>
@@ -201,7 +201,7 @@ export default {
 
       let dataset = vm.articlesData;
       // 有套用數值區間
-      if (dataRange) dataset = dataset.filter((item) => vm._.inRange(item.meta[dataType], dataRangeMin, dataRangeMax));
+      if (dataRange) dataset = dataset.filter((item) => vm._.inRange(item.meta[dataType], dataRangeMin, dataRangeMax + 1));
       // 有設定排序類型
       if (dataSortBy === 'date') {
         dataset = vm._.sortBy(dataset, (item) => new Date(item.meta[dataSortBy])).reverse();
@@ -227,9 +227,9 @@ export default {
       let dataset = vm.articlesData;
 
       // 有套用view區間
-      if (viewRange) dataset = dataset.filter((item) => vm._.inRange(item.meta.view, viewRangeMin, viewRangeMax));
+      if (viewRange) dataset = dataset.filter((item) => vm._.inRange(item.meta.view, viewRangeMin, viewRangeMax + 1));
       // 有套用gp區間
-      if (gpRange) dataset = dataset.filter((item) => vm._.inRange(item.meta.gp, gpRangeMin, gpRangeMax));
+      if (gpRange) dataset = dataset.filter((item) => vm._.inRange(item.meta.gp, gpRangeMin, gpRangeMax + 1));
 
       // 資料類型(用於顯示筆數)
       if (dataType === 'date') {

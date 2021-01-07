@@ -1,85 +1,86 @@
 <template>
-<div class="row">
-  <div class="col-33">
-    <!-- <el-button icon="el-icon-plus" type="primary" @click="dialogTransfer = true">建立群組</el-button> -->
-    <el-dialog title="建立群組" :visible.sync="dialogTransfer" width="80%" :destroy-on-close="true">
-      <transfer-box :inputData="other" :groupsName="allGroupsName" @returnData="createGroup"></transfer-box>
-    </el-dialog>
-    <div v-if="allGroupsName.length > 1">
-      <div class="card"
-        :class="{'card-muted': _.includes(disabledGroups,groupName)}"
-        v-for="(groupArticles, groupName) in groups"
-        :key="groupName">
-        <div class="row">
-          <div class="col-50 card-title">
-            {{`${groupName}(${groupArticles.length}篇)`}}
-          </div>
-          <div class="col-50">
-            <el-tooltip :content="_.includes(disabledGroups,groupName) ? '加入比對' : '抽離比對'">
-              <el-button
-                :type="_.includes(disabledGroups,groupName) ? 'success' : 'danger'"
-                :icon="_.includes(disabledGroups,groupName) ? 'el-icon-circle-plus-outline' : 'el-icon-remove-outline'"
-                @click="toggleGroup(groupName)">
-              </el-button>
-            </el-tooltip>
-            <el-tooltip content="群組資訊">
-              <el-button
-                type="primary"
-                icon="el-icon-s-data"
-                @click="detailGroup(groupName)"></el-button>
-            </el-tooltip>
-            <el-tooltip content="刪除群組">
-              <el-button
-                type="danger"
-                icon="el-icon-delete"
-                @click="deleteGroup(groupName)"
-                v-if="groupName !== '其他'"></el-button>
-            </el-tooltip>
-          </div>
-        </div>
-      </div>
-      <el-dialog
-        :title="`${detailGroupName} - (${groups[this.detailGroupName].length}篇)`"
-        :visible.sync="dialogDetail"
-        width="80%"
-        :destroy-on-close="true"
-        v-if="detailGroupName.length !== 0"
-        @closed="detailGroupName = ''">
-        <div class="row">
-          <div class="col-33">
-            <el-scrollbar wrapStyle="max-height:500px;">
-              <ul class="list">
-                <li v-for="article in groups[this.detailGroupName]" :key="article.id">{{article.title}}</li>
-              </ul>
-            </el-scrollbar>
-          </div>
-          <div class="col-66">
-            <div class="chart-container">
-              <scatter-chart :inputData="detailGroupDataset" v-if="detailGroupName !== ''"></scatter-chart>
+<main>
+  <div class="row">
+    <div class="col-33">
+      <el-dialog title="建立群組" :visible.sync="dialogTransfer" width="80%" :destroy-on-close="true">
+        <transfer-box :inputData="other" :groupsName="allGroupsName" @returnData="createGroup"></transfer-box>
+      </el-dialog>
+      <div v-if="allGroupsName.length > 1">
+        <div class="card"
+          :class="{'card-muted': _.includes(disabledGroups,groupName)}"
+          v-for="(groupArticles, groupName) in groups"
+          :key="groupName">
+          <div class="row">
+            <div class="col-50 card-title">
+              {{`${groupName}(${groupArticles.length}篇)`}}
+            </div>
+            <div class="col-50">
+              <el-tooltip :content="_.includes(disabledGroups,groupName) ? '加入比對' : '抽離比對'">
+                <el-button
+                  :type="_.includes(disabledGroups,groupName) ? 'success' : 'danger'"
+                  :icon="_.includes(disabledGroups,groupName) ? 'el-icon-circle-plus-outline' : 'el-icon-remove-outline'"
+                  @click="toggleGroup(groupName)">
+                </el-button>
+              </el-tooltip>
+              <el-tooltip content="群組資訊">
+                <el-button
+                  type="primary"
+                  icon="el-icon-s-data"
+                  @click="detailGroup(groupName)"></el-button>
+              </el-tooltip>
+              <el-tooltip content="刪除群組">
+                <el-button
+                  type="danger"
+                  icon="el-icon-delete"
+                  @click="deleteGroup(groupName)"
+                  v-if="groupName !== '其他'"></el-button>
+              </el-tooltip>
             </div>
           </div>
         </div>
-      </el-dialog>
-    </div>
-    <div class="btn-placeholder" @click="dialogTransfer = true">
-      <i class="el-icon-plus"></i> 新增群組
-    </div>
-  </div>
-
-  <div class="col-66">
-
-    <div class="row">
-      <div class="col-50" v-for="(value, name, index) in totalDataset" :key="name + index">
-        <div class="card chart-container">
-          <h3 class="card-title">{{ $store.state.dictionary[name] }}</h3>
-          <pie-chart v-if="allGroupsName.length > 1" :inputData="value"></pie-chart>
-          <div v-else class="bg-nodata">沒有群組資料</div>
-        </div>
+        <el-dialog
+          :title="`${detailGroupName} - (${groups[this.detailGroupName].length}篇)`"
+          :visible.sync="dialogDetail"
+          width="80%"
+          :destroy-on-close="true"
+          v-if="detailGroupName.length !== 0"
+          @closed="detailGroupName = ''">
+          <div class="row">
+            <div class="col-33">
+              <el-scrollbar wrapStyle="max-height:500px;">
+                <ul class="list">
+                  <li v-for="article in groups[this.detailGroupName]" :key="article.id">{{article.title}}</li>
+                </ul>
+              </el-scrollbar>
+            </div>
+            <div class="col-66">
+              <div class="chart-container">
+                <scatter-chart :inputData="detailGroupDataset" v-if="detailGroupName !== ''"></scatter-chart>
+              </div>
+            </div>
+          </div>
+        </el-dialog>
+      </div>
+      <div class="btn-placeholder" @click="dialogTransfer = true">
+        <i class="el-icon-plus"></i> 新增群組
       </div>
     </div>
 
+    <div class="col-66">
+
+      <div class="row">
+        <div class="col-50" v-for="(value, name, index) in totalDataset" :key="name + index">
+          <div class="card chart-container">
+            <h3 class="card-title">{{ $store.state.dictionary[name] }}</h3>
+            <pie-chart v-if="allGroupsName.length > 1" :inputData="value"></pie-chart>
+            <div v-else class="bg-nodata">沒有群組資料</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
   </div>
-</div>
+</main>
 </template>
 <script>
 import transferBox from '../components/transferBox.vue';

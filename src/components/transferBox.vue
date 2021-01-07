@@ -4,7 +4,13 @@
       <el-input v-model="transferForm.tempName" placeholder="請輸入群組名稱"></el-input>
     </el-form-item>
     <el-form-item>
-      <el-transfer filterable v-model="transferTemp" :data="transferData" :titles="['可選文章', transferForm.tempName]" filter-placeholder="關鍵字"></el-transfer>
+      <el-transfer
+        v-model="transferTemp"
+        :data="transferData"
+        :titles="['可選文章', transferForm.tempName]"
+        filterable
+        filter-placeholder="關鍵字">
+      </el-transfer>
     </el-form-item>
     <el-form-item>
       <el-button type="primary" @click="returnTemp" :disabled="transferTemp.length <= 0">新增</el-button>

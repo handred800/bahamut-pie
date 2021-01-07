@@ -17,6 +17,7 @@ html {
   font-size: 18px;
   line-height: 1.8rem;
   font-family: "HunInn","微軟正黑體";
+  background-color: #e8f6f2;
 }
 a {
   text-decoration: none;
@@ -62,14 +63,26 @@ ul.list{
   .logo{
     
   }
-
-  .landing-panel{
-    width: 100%;
-    
+  .landing-searchbar{
+    display: flex;
+    padding: 5px;
+    background-color: #fff;
+    box-shadow: 0 2px 20px -5px rgba($color-primary, 0.3);
+    border-radius: $border-radius;
+    transition: 0.2s;
   }
+
   @media screen and (min-width: 769px) {
-    .landing-panel{
-      max-width: 580px;
+
+  }
+  input{
+    font-size: 1rem;
+    padding: .3rem .5rem;
+    margin-right: 1rem;
+    border: none;
+    outline: none;
+    transition: .2s;
+    &:focus{
     }
   }
 }
@@ -89,6 +102,7 @@ ul.list{
   }
   &.card-muted{
     color: $color-gray;
+    background-color: rgba(#fff,.5);
     box-shadow: 0 0 0 0 transparent;
   }
   .card-title {
@@ -117,6 +131,7 @@ ul.list{
       margin: auto;
       top: 50%;
       transform: translateY(-50%);
+      font-weight: bold;
     }
   }
   .card-content{
@@ -157,7 +172,9 @@ ul.list{
   font-weight: bold;
   color: $color-primary;
 }
-
+.subtitle{
+  color: $color-gray;
+}
 
 // articles 搜尋轉場
 .article-list{

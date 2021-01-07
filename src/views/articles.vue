@@ -1,9 +1,11 @@
 <template>
 <div>
-  <el-input v-model="keyword" placeholder="關鍵字">
-    <i slot="prefix" class="el-input__icon el-icon-search"></i>
-  </el-input>
-  <el-divider content-position="left"><span v-if="keyword!==''">找到{{articleListFilted.length}}篇文</span></el-divider>
+  <div class="card">
+    <el-input v-model="keyword" placeholder="關鍵字">
+      <i slot="prefix" class="el-input__icon el-icon-search"></i>
+    </el-input>
+    <span v-if="keyword!==''">找到{{articleListFilted.length}}篇文</span>
+  </div>
   <div v-if="articlesData.length > 0">
     <transition-group name="article-list" class="row">
       <div class="col-33 article-list" v-for="(data,index) in articleListFilted" :key="`${data.meta.date}-${index}`">

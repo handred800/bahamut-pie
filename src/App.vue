@@ -1,11 +1,11 @@
 <template>
   <div id="app">
-    <div class="nav" v-if="$router.currentRoute.path !== '/'">
+    <div class="nav" v-if="this.$router.currentRoute.path !== '/'">
       <router-link to="/dashboard">儀表板</router-link> |
       <router-link to="/articles">文章</router-link> |
       <router-link to="/playground">Playground</router-link>
     </div>
-    <router-view/>
+    <router-view :class="{'container': this.$router.currentRoute.path !== '/'}"/>
   </div>
 </template>
 

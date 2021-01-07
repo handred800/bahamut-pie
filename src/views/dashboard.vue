@@ -17,7 +17,7 @@
           <div class="card-title">
             {{$store.state.dictionary[barchartFilterConfig.dataType]}}圖表
             <el-popover title="資料篩選" trigger="click" width="300" placement="right-start">
-              <el-button class="float-right" icon="el-icon-setting" @click="dialogBarchart = true;" slot="reference"></el-button>
+              <el-button class="float-right" icon="el-icon-setting" @click="popoverBarchart = true;" slot="reference"></el-button>
               <el-form size="mini" label-position="top">
                 <el-form-item>
                   <el-select v-model="barchartFilterConfig.dataType">
@@ -46,24 +46,83 @@
                 </el-form-item>
                 <el-form-item>
                   <el-col :span="11">
-                    <el-input-number controls-position="right" :min="0" v-model="barchartFilterConfig.dataRangeMin"></el-input-number>
+                    <el-input-number
+                      controls-position="right"
+                      :disabled="!barchartFilterConfig.dataRange"
+                      :min="0"
+                      v-model="barchartFilterConfig.dataRangeMin">
+                    </el-input-number>
                   </el-col>
                   <el-col :span="2"> ~ </el-col>
                   <el-col :span="11">
-                    <el-input-number controls-position="right" :min="barchartFilterConfig.dataRangeMin" v-model="barchartFilterConfig.dataRangeMax"></el-input-number>
+                    <el-input-number
+                      controls-position="right"
+                      :disabled="!barchartFilterConfig.dataRange"
+                      :min="barchartFilterConfig.dataRangeMin"
+                      v-model="barchartFilterConfig.dataRangeMax">
+                    </el-input-number>
                   </el-col>
                 </el-form-item>
                 <el-button size="small" icon="el-icon-refresh" @click="resetChaetConfig('barchartFilterConfig')">重置</el-button>
               </el-form>
             </el-popover>
           </div>
-
           <bar-chart :inputData="barChartDataset" v-if="articlesData.length > 0"></bar-chart>
         </div>
       </div>
       <div class="col-50">
         <div class="card chart-container">
-          <div class="card-title">瀏覽 / GP 散佈圖</div>
+          <div class="card-title">
+            瀏覽 / GP 散佈圖
+            <el-popover title="資料篩選" trigger="click" width="300" placement="left-start">
+              <el-button class="float-right" icon="el-icon-setting" @click="popoverScatterchart = true;" slot="reference"></el-button>
+              <el-form size="mini" label-position="top">
+                <el-form-item label="顯示筆數">
+                  <el-col :span="12">
+                    <el-select v-model="scatterchartFilterConfig.dataType">
+                      <el-option value="date" label="時間：新→舊"></el-option>
+                      <el-option value="view" label="觀看數：高→低"></el-option>
+                      <el-option value="gp" label="GP：高→低"></el-option>
+                    </el-select>
+                  </el-col>
+                  <el-col :span="12">
+                    <el-select v-model.number="scatterchartFilterConfig.dataLength">
+                      <el-option :value="-1" label="全部"></el-option>
+                      <el-option :value="10" label="前10筆"></el-option>
+                      <el-option :value="30" label="前30筆"></el-option>
+                      <el-option :value="50" label="前50筆"></el-option>
+                      <el-option :value="100" label="前100筆"></el-option>
+                    </el-select>
+                  </el-col>
+                </el-form-item>
+                <el-form-item>
+                  <el-switch v-model="scatterchartFilterConfig.viewRange" active-text="套用觀看數區間"></el-switch>
+                </el-form-item>
+                <el-form-item>
+                  <el-col :span="11">
+                    <el-input-number controls-position="right" :min="0" v-model="scatterchartFilterConfig.viewRangeMin"></el-input-number>
+                  </el-col>
+                  <el-col :span="2"> ~ </el-col>
+                  <el-col :span="11">
+                    <el-input-number controls-position="right" :min="scatterchartFilterConfig.viewRangeMin" v-model="scatterchartFilterConfig.viewRangeMax"></el-input-number>
+                  </el-col>
+                </el-form-item>
+                <el-form-item>
+                  <el-switch v-model="scatterchartFilterConfig.gpRange" active-text="套用GP區間"></el-switch>
+                </el-form-item>
+                <el-form-item>
+                  <el-col :span="11">
+                    <el-input-number controls-position="right" :min="0" v-model="scatterchartFilterConfig.gpRangeMin"></el-input-number>
+                  </el-col>
+                  <el-col :span="2"> ~ </el-col>
+                  <el-col :span="11">
+                    <el-input-number controls-position="right" :min="scatterchartFilterConfig.gpRangeMin" v-model="scatterchartFilterConfig.gpRangeMax"></el-input-number>
+                  </el-col>
+                </el-form-item>
+                <el-button size="small" icon="el-icon-refresh" @click="resetChaetConfig('scatterchartFilterConfig')">重置</el-button>
+              </el-form>
+            </el-popover>
+          </div>
           <scatter-chart :inputData="scatterDataset" v-if="articlesData.length > 0"></scatter-chart>
         </div>
       </div>
@@ -106,8 +165,10 @@ export default {
   components: { barChart, scatterChart, calendarChart },
   data() {
     return {
-      dialogBarchart: false,
+      popoverBarchart: false,
+      popoverScatterchart: false,
       barchartFilterConfig: {},
+      scatterchartFilterConfig: {},
       calendarchart: {
         options: [],
         sessionRange: '',
@@ -140,11 +201,8 @@ export default {
 
       let dataset = vm.articlesData;
       // 有套用數值區間
-      if (dataRange) {
-        dataset = dataset.filter((item) => vm._.inRange(item.meta[dataType], dataRangeMin, dataRangeMax));
-      }
+      if (dataRange) dataset = dataset.filter((item) => vm._.inRange(item.meta[dataType], dataRangeMin, dataRangeMax));
       // 有設定排序類型
-      // if (dataSortBy !== 'default') dataset.sort((a, b) => b.meta[dataSortBy] - a.meta[dataSortBy]);
       if (dataSortBy === 'date') {
         dataset = vm._.sortBy(dataset, (item) => new Date(item.meta[dataSortBy])).reverse();
       } else {
@@ -161,7 +219,28 @@ export default {
       return dataset;
     },
     scatterDataset() {
-      return this.articlesData.map((article) => ({
+      const vm = this;
+      const {
+        dataType, dataLength, viewRange, viewRangeMin, viewRangeMax, gpRange, gpRangeMin, gpRangeMax,
+      } = vm.scatterchartFilterConfig;
+
+      let dataset = vm.articlesData;
+
+      // 有套用view區間
+      if (viewRange) dataset = dataset.filter((item) => vm._.inRange(item.meta.view, viewRangeMin, viewRangeMax));
+      // 有套用gp區間
+      if (gpRange) dataset = dataset.filter((item) => vm._.inRange(item.meta.gp, gpRangeMin, gpRangeMax));
+
+      // 資料類型(用於顯示筆數)
+      if (dataType === 'date') {
+        dataset = vm._.sortBy(dataset, (item) => new Date(item.meta[dataType])).reverse();
+      } else {
+        dataset = vm._.sortBy(dataset, (item) => item.meta[dataType]).reverse();
+      }
+      // 有設定顯示筆數
+      if (dataLength !== -1) dataset = dataset.slice(0, dataLength);
+
+      return dataset.map((article) => ({
         title: article.title,
         gp: article.meta.gp,
         view: article.meta.view,
@@ -190,6 +269,7 @@ export default {
     })();
 
     this.barchartFilterConfig = this._.cloneDeep(this.$store.state.dashboardConfig.barchartFilterConfig);
+    this.scatterchartFilterConfig = this._.cloneDeep(this.$store.state.dashboardConfig.scatterchartFilterConfig);
   },
 };
 </script>

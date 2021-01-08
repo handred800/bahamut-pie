@@ -9,24 +9,40 @@ const routes = [
     redirect: '/',
   },
   {
+    name: 'landing-page',
     path: '/',
     component: () => import('../views/landing.vue'),
-    meta: { needData: false },
+    meta: {
+      index: 0,
+      needData: false,
+    },
   },
   {
+    name: 'dashboard',
     path: '/dashboard',
     component: () => import('../views/dashboard.vue'),
-    meta: { needData: true },
+    meta: {
+      index: 1,
+      needData: true,
+    },
   },
   {
+    name: 'articles',
     path: '/articles',
     component: () => import('../views/articles.vue'),
-    meta: { needData: true },
+    meta: {
+      index: 2,
+      needData: true,
+    },
   },
   {
+    name: 'playground',
     path: '/playground',
     component: () => import('../views/playground.vue'),
-    meta: { needData: true },
+    meta: {
+      index: 3,
+      needData: true,
+    },
   },
 ];
 

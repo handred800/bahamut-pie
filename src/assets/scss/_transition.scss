@@ -1,0 +1,41 @@
+// articles 搜尋轉場
+.article-list {
+  transition: all 0.3s;
+}
+.article-list-leave-active {
+  position: absolute;
+  z-index: -1;
+}
+.article-list-enter,
+.article-list-leave-to {
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+// header 轉場
+.slide-down-enter-active,
+.slide-down-leave-active {
+  transition: all .3s ease .3s;
+}
+.slide-down-enter,
+.slide-down-leave-to {
+  transform: translateY(-100%);
+}
+
+// router-view 頁面轉場
+.slide-left-leave-active,
+.slide-right-leave-active,
+.slide-left-enter-active,
+.slide-right-enter-active {
+  transition: all 0.3s;
+}
+.slide-right-enter,
+.slide-left-leave-to {
+  opacity: 0;
+  transform: translateX(20%);
+}
+.slide-left-enter,
+.slide-right-leave-to {
+  opacity: 0;
+  transform: translateX(-20%);
+}

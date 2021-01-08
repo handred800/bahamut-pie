@@ -12,6 +12,7 @@ export default new Vuex.Store({
       gp: 'GP',
       view: '觀看數',
     },
+    ownerId: '',
     allData: [],
     isLoading: false,
     dashboardConfig: {
@@ -39,6 +40,9 @@ export default new Vuex.Store({
     setIsLoading(state, payload) {
       state.isLoading = payload;
     },
+    setOwnerId(state, payload) {
+      state.ownerId = payload;
+    },
     setData(state, payload) {
       state.allData = payload;
     },
@@ -46,9 +50,18 @@ export default new Vuex.Store({
       state.allData = [];
       sessionStorage.clear('cacheData');
     },
+    createNotify(state, payload) {
+      const options = {
+        duration: 3000,
+        offset: 80,
+      };
+
+      Object.assign(options, payload);
+      this._vm.$notify(options);// eslint-disable-line
+    },
   },
   actions: {
-    fetchUser({ commit }, payload) {
+    fetchData({ commit }, payload) {
       commit('setIsLoading', true);
       fetch(`https://bahamut-home-article-cralwer.herokuapp.com?owner=${payload}`)
         .then((res) => res.json())
@@ -56,7 +69,18 @@ export default new Vuex.Store({
           sessionStorage.setItem('cacheData', JSON.stringify(data));
           commit('setData', data);
           commit('setIsLoading', false);
+          commit('createNotify', {
+            title: '資料載入完成',
+            type: 'success',
+          });
           router.push('/dashboard');
+        })
+        .catch((error) => {
+          console.log(error);
+          commit('createNotify', {
+            title: '載入錯誤，請看console',
+            type: 'error',
+          });
         });
     },
   },

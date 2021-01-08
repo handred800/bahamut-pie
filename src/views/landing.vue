@@ -24,7 +24,9 @@ export default {
   },
   methods: {
     searchUser() {
-      this.$store.dispatch('fetchUser', this.ownerId);
+      if (this.ownerId === '') return;
+      this.$store.commit('setOwnerId', this.ownerId);
+      this.$store.dispatch('fetchData', this.ownerId);
     },
   },
   computed: {

@@ -65,22 +65,23 @@ export default new Vuex.Store({
       commit('setIsLoading', true);
       fetch(`https://bahamut-home-article-cralwer.herokuapp.com?owner=${payload}`)
         .then((res) => res.json())
-        .then(({ data }) => {
-          sessionStorage.setItem('cacheData', JSON.stringify(data));
-          commit('setData', data);
+        .then(({ success, data }) => {
           commit('setIsLoading', false);
-          commit('createNotify', {
-            title: '資料載入完成',
-            type: 'success',
-          });
-          router.push('/dashboard');
-        })
-        .catch((error) => {
-          console.log(error);
-          commit('createNotify', {
-            title: '載入錯誤，請看console',
-            type: 'error',
-          });
+          if (success) {
+            sessionStorage.setItem('cacheData', JSON.stringify(data));
+            commit('setData', data);
+            commit('createNotify', {
+              title: '資料載入完成',
+              type: 'success',
+            });
+            router.push('/dashboard');
+          } else {
+            commit('createNotify', {
+              title: data.message,
+              type: 'error',
+              duration: 4000,
+            });
+          }
         });
     },
   },

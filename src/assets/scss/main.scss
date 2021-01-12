@@ -25,6 +25,12 @@ a {
   text-decoration: none;
   color: $color-primary;
 }
+p{
+  margin-bottom: 1rem;
+}
+strong,.fw-bold{
+  font-weight: bold;
+}
 header{
   position: fixed;
   top: 0;
@@ -70,6 +76,10 @@ ul.list{
   float: right;
 }
 
+.fz-18{
+  font-size: 18px;
+}
+
 .landing-page{
   background: $color-primary;
   background: linear-gradient(315deg, $color-primary 10%, $color-secondary 110%);
@@ -80,9 +90,6 @@ ul.list{
   align-items: center;
   box-sizing: border-box;
 
-  .logo{
-    
-  }
   .landing-searchbar{
     display: flex;
     padding: 5px;
@@ -103,6 +110,11 @@ ul.list{
     &:focus{
     }
   }
+}
+.float-btn{
+  position: absolute;
+  bottom: 25px;
+  right: 25px;
 }
 
 .card {

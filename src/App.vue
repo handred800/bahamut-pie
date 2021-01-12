@@ -17,11 +17,31 @@
         </div>
       </header>
     </transition>
-    <el-dialog title="關於巴哈姆派" width="500px" top="20vh" :visible.sync="dialogAbout">
+    <el-dialog title="關於巴哈姆派" width="650px" top="20vh" :visible.sync="dialogAbout">
+      <el-scrollbar wrapStyle="max-height:500px;" class="fz-18">
+        <p>
+          安安你好！我是巴哈姆派的作者 <a class="fw-bold" href="https://home.gamer.com.tw/homeindex.php?owner=handred800" target="_blank">handred800</a><br>
+        </p>
+        <p>
+          本人在巴哈小屋創作遊戲心得有一段時間了，身為一個創作者想知道流量數據或讀者偏好是很正常的事！<br>
+          但站方沒提供什麼有用的數據面板功能，那自己就跳下來做一個吧～<br>
+        </p>
+        <p>
+          如果你在烤派時遇到任何問題或是有任何功能建議，歡迎至 <a class="fw-bold" href="https://peing.net/zh-TW/handred800" target="_blank">提問箱</a> 留言。<br>
+          最後，如果你是工程師大大也很歡迎來此專案的 <a class="fw-bold" href="https://github.com/handred800/bahamut-pie" target="_blank">gh-page</a> 指教或發PR。
+        </p>
+      </el-scrollbar>
     </el-dialog>
     <transition :name="transitionName" mode="out-in">
       <router-view :class="{'container': this.$router.currentRoute.path !== '/'}"/>
     </transition>
+    <el-button
+      v-if="this.$router.currentRoute.path === '/'"
+      class="float-btn"
+      type="link"
+      icon="el-icon-info"
+      @click="dialogAbout = true;">
+    </el-button>
   </div>
 </template>
 

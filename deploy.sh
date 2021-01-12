@@ -3,8 +3,11 @@
 set -e
 # 打包
 npm run build
+
 # 移動至到打包後的dist目錄 
 cd dist
+# 複製index.html當作錯誤頁(404.html)
+cp index.html 404.html
 git init
 git add -A
 git commit -m '部屬'

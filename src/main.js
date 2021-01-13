@@ -5,6 +5,7 @@ import '@/assets/theme/index.css';
 import ECharts from 'vue-echarts';
 import _ from 'lodash';
 import VueGtag from 'vue-gtag';
+import Hotjar from 'vue-hotjar';
 import '@/assets/scss/main.scss';
 import App from './App.vue';
 import router from './router';
@@ -30,6 +31,10 @@ Vue.config.productionTip = false;
 Vue.use(VueGtag, {
   config: { id: 'G-BNX0T2NJ85' },
 }, router);
+
+Vue.use(Hotjar, {
+  id: '2194240',
+});
 
 router.beforeEach((to, from, next) => {
   if (to.meta.needData) {

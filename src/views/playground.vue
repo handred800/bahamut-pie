@@ -104,6 +104,11 @@ export default {
       const vm = this;
       const tempGroup = [];
       vm.dialogTransfer = false;
+      this.$gtag.event('點擊', {
+        event_category: 'playground',
+        event_label: '新增群組',
+        value: tempName,
+      });
 
       tempIdArray.forEach((tempId) => {
         const targetIndex = vm._.findIndex(vm.other, (otherItem) => otherItem.id === tempId);

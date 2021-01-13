@@ -4,6 +4,7 @@ import '@/assets/theme/index.css';
 // import 'element-ui/lib/theme-chalk/index.css';
 import ECharts from 'vue-echarts';
 import _ from 'lodash';
+import VueGtag from 'vue-gtag';
 import '@/assets/scss/main.scss';
 import App from './App.vue';
 import router from './router';
@@ -25,6 +26,10 @@ Vue.prototype._ = _;
 Vue.use(ElementUI);
 Vue.component('v-chart', ECharts);
 Vue.config.productionTip = false;
+
+Vue.use(VueGtag, {
+  config: { id: 'G-BNX0T2NJ85' },
+}, router);
 
 router.beforeEach((to, from, next) => {
   if (to.meta.needData) {

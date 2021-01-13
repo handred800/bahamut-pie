@@ -17,7 +17,7 @@
         </div>
       </header>
     </transition>
-    <el-dialog title="關於巴哈姆派" width="650px" top="20vh" :visible.sync="dialogAbout">
+    <el-dialog title="關於巴哈姆派" width="650px" top="20vh" :visible.sync="dialogAbout" @opened="gaOpenDialog">
       <el-scrollbar wrapStyle="max-height:500px;" class="fz-18">
         <p>
           安安你好！我是巴哈姆派的作者 <a class="fw-bold" href="https://home.gamer.com.tw/homeindex.php?owner=handred800" target="_blank">handred800</a><br>
@@ -72,6 +72,13 @@ export default {
         default:
           break;
       }
+    },
+    gaOpenDialog() {
+      this.$gtag.event('開啟', {
+        event_category: '非功能',
+        event_label: '關於視窗',
+        value: 300,
+      });
     },
   },
   watch: {

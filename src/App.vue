@@ -31,6 +31,9 @@
           最後，如果你是工程師大大也很歡迎來此專案的 <a class="fw-bold" href="https://github.com/handred800/bahamut-pie" target="_blank">gh-page</a> 指教或發PR。
         </p>
       </el-scrollbar>
+      <div slot="footer" class="dialog-footer">
+        <a href="https://www.buymeacoffee.com/handred800" target="_blank" class="el-button el-button--primary" @click="donateLink">🥧 贊助烤派</a>
+      </div>
     </el-dialog>
     <transition :name="transitionName" mode="out-in">
       <router-view :class="{'container': this.$router.currentRoute.path !== '/'}"/>
@@ -77,7 +80,14 @@ export default {
       this.$gtag.event('開啟', {
         event_category: '非功能',
         event_label: '關於視窗',
-        value: 300,
+        value: 5,
+      });
+    },
+    donateLink() {
+      this.$gtag.event('點擊', {
+        event_category: '非功能',
+        event_label: '贊助',
+        value: 30,
       });
     },
   },
